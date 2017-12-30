@@ -9,7 +9,7 @@ Monty Python's "Four Yorkshiremen" sketch is perhaps the best embodiment of the 
 
 .. raw:: html
 
-    <iframe width="854" height="480" src="https://www.youtube.com/embed/ue7wM0QC5LE" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+    <iframe width="690" height="500" src="https://www.youtube.com/embed/ue7wM0QC5LE" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 That is - a bunch of (ahem... old) people, sitting around, pining for "the good old days", lamenting how kids these days don't know how good they've got it.
 
