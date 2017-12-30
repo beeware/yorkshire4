@@ -10,16 +10,16 @@ Computer Space Games
 .. toctree::
    :maxdepth: 1
 
-   starship-takeoff/index
-   intergalactic-games/index
-   evil-alien/index
-   beat-the-bug-eyes/index
+   starship_takeoff/index
+   intergalactic_games/index
+   evil_alien/index
+   beat_the_bug_eyes/index
    moonlander/index
-   monsters-of-galacticon/index
-   alien-snipers/index
-   asteroid-belt/index
-   trip-into-the-future/index
-   death-valley/index
-   space-mines/index
-   space-rescue/index
+   monsters_of_galacticon/index
+   alien_snipers/index
+   asteroid_belt/index
+   trip_into_the_future/index
+   death_valley/index
+   space_mines/index
+   space_rescue/index
    touchdown/index
