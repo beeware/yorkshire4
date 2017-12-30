@@ -5,5 +5,5 @@ Alien Snipers
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: alien_snipers.py
    :language: python

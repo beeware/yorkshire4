@@ -8,7 +8,7 @@ Computer Space Games
 
 
 .. toctree::
-
+   :maxdepth: 1
    starship-takeoff/index
    intergalactic-games/index
    evil-alien/index

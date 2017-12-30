@@ -1,8 +1,9 @@
-space-rescue
-
+============
+Space Rescue
+============
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: space_rescue.py
    :language: python

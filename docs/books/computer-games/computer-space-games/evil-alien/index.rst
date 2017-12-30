@@ -1,8 +1,9 @@
-evil-alien
-
+==========
+Evil Alien
+==========
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: evil_alien.py
    :language: python

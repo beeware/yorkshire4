@@ -1,8 +1,9 @@
-asteroid-belt
-
+=============
+Asteroid Belt
+=============
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: asteroid_belt.py
    :language: python

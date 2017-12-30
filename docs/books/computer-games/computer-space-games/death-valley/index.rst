@@ -1,8 +1,10 @@
-death-valley
+============
+Death Valley
+============
 
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: death_valley.py
    :language: python

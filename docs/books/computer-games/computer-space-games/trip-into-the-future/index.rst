@@ -1,8 +1,9 @@
-trip-into-the-future
-
+====================
+Trip into the Future
+====================
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: trip_into_the_future.py
    :language: python

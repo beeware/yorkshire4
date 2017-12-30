@@ -1,7 +1,9 @@
-touchdown
+=========
+Touchdown
+=========
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: touchdown.py
    :language: python

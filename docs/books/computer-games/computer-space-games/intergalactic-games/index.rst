@@ -1,8 +1,9 @@
-intergalactic-games
-
+===================
+Intergalactic Games
+===================
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: intergalactic_games.py
    :language: python

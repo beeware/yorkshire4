@@ -1,8 +1,9 @@
-monsters-of-galacticon
-
+======================
+Monsters of Galacticon
+======================
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: monsters_of_galacticon.py
    :language: python

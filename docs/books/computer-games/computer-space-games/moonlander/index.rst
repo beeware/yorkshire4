@@ -1,8 +1,9 @@
-moonlander
-
+==========
+Moonlander
+==========
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: moonlander.py
    :language: python

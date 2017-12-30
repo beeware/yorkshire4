@@ -1,8 +1,10 @@
-space-mines
+===========
+Space Mines
+===========
 
 
 The code
 ========
 
-.. literalinclude:: game.py
+.. literalinclude:: space_mines.py
    :language: python
