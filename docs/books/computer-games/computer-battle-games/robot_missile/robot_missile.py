@@ -1,10 +1,11 @@
 import random
 import string
 
-print('ROBOT MISSLE' \
-      '\n'
-      '\nType the correct code letter (A-Z) to defuse the missle.' \
-      '\nYou have 4 chances.')
+print('ROBOT MISSILE')
+print()
+print('Type the correct code letter (A-Z) to defuse the missile.')
+print('You have 4 chances.')
+print()
 
 code = random.choice(string.ascii_lowercase)
 
@@ -26,6 +27,6 @@ if success:
     print('TICK... FIZZ... CLICK...'
           '\nYou did it!')
 else:
-    print('BOOOOOOOOMMM...' \
-          '\nYou blew it!' \
+    print('BOOOOOOOOMMM...'
+          '\nYou blew it!'
           '\nThe correct code was \'%s\'.' % code)
