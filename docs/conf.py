@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# yorkshire documentation build configuration file, created by
+# yorkshire4 documentation build configuration file, created by
 # sphinx-quickstart on Sat Dec 30 11:31:29 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -17,7 +17,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'yorkshire'
+project = 'yorkshire4'
 copyright = '2017, Russell Keith-Magee'
 author = 'Russell Keith-Magee'
 
@@ -83,7 +83,17 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+# on_rtd: whether we are on readthedocs.org
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    try:
+        import sphinx_rtd_theme
+    except ModuleNotFoundError:
+        html_theme = 'default'
+    else:
+        html_theme = 'sphinx_rtd_theme'
+        html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -112,7 +122,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'yorkshiredoc'
+htmlhelp_basename = 'yorkshire4doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -139,7 +149,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'yorkshire.tex', 'yorkshire Documentation',
+    (master_doc, 'yorkshire4.tex', 'yorkshire4 Documentation',
      'Russell Keith-Magee', 'manual'),
 ]
 
@@ -149,7 +159,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'yorkshire', 'yorkshire Documentation',
+    (master_doc, 'yorkshire4', 'yorkshire4 Documentation',
      [author], 1)
 ]
 
@@ -160,8 +170,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'yorkshire', 'yorkshire Documentation',
-     author, 'yorkshire', 'One line description of project.',
+    (master_doc, 'yorkshire4', 'yorkshire4 Documentation',
+     author, 'yorkshire4', 'One line description of project.',
      'Miscellaneous'),
 ]
 
