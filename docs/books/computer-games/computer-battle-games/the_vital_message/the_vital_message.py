@@ -1,4 +1,3 @@
-
 # Import 'random' so we can generate random numbers.
 # The 'string' module gives us access to string-related utilities
 #The 'time' module helps us to wait for some time
