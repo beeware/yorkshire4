@@ -52,14 +52,14 @@ try:
     #
     # But though we're in "raw" mode, we can't answer the question "has the
     # user typed
-    # key or not?" To do *that*, you need to use an operating system call called
-    # `select`. Select is a method used to inspect the status of "pipes" of content
-    # to determine if any content is ready. The keyboard in an "input pipe"; the
-    # screen is an "output pipe". Select waits until a specific pipe has content
-    # available; you also provide a timeout which is the maximum length of time
-    # that the select call will wait until content is available. This timeout can
-    # be "0 seconds", or it can be as long as you're willing to wait.
-
+    # key or not?" To do *that*, you need to use an operating system call
+    # called `select`. Select is a method used to inspect the status of
+    # "pipes" of content to determine if any content is ready. The keyboard
+    # in an "input pipe"; the screen is an "output pipe". Select waits until
+    # a specific pipe has content available; you also provide a timeout which
+    # is the maximum length of time that the select call will wait until
+    # content is available. This timeout can be "0 seconds", or it can be
+    # as long as you're willing to wait.
     def getch(timeout=None):
         # If we aren't using a timeout, we can just read from the input pipe.
         # If we *do* have a timeout, use the select call to wait until input
@@ -69,7 +69,8 @@ try:
         else:
             ch = None
 
-        # Return the character that was read - or None, if no character was pressed.
+        # Return the character that was read
+        # - or None, if no character was pressed.
         return ch
 
     # Now we can start the actual game.
@@ -85,8 +86,8 @@ try:
         clear_screen()
 
         # random.random() returns a floating point number in the range 0 -> 1
-        # Add 0.5 to get a number between 0.5 and 1.5. That's how long we'll sleep
-        # before displaying some eyes.
+        # Add 0.5 to get a number between 0.5 and 1.5. That's how long we'll
+        # sleep before displaying some eyes.
         time.sleep(random.random() + 0.5)
 
         # Pick a random zone in which to display the eyes.
@@ -132,7 +133,8 @@ try:
 finally:
     # No matter what happens, clean up after yourself.
 
-    # Use the ?25h ANSI escape code to restore the cursor, and ?12l to turn on local echo
+    # Use the ?25h ANSI escape code to restore the cursor,
+    # and ?12l to turn on local echo
     print('\033[?25h\033[?12l')
 
     # No matter what happens, drain the input pipe, and restore to

@@ -174,6 +174,3 @@ texinfo_documents = [
      author, 'yorkshire4', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
