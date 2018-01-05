@@ -89,3 +89,9 @@ FLAGS[28] = True # drawer
 
 ROOM = 57
 MESSAGE = 'OK'
+
+# utility to convert old room indexes to the "modern map" for checking
+def old_coord_convert(old_index):
+    row = int(old_index/MAP_ROWS)
+    col = old_index - (row * MAP_ROWS)
+    return MODERN_MAP[row][col], row, col
