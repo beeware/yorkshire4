@@ -20,7 +20,7 @@ import sys
 def clear_screen():
     print('\033[2J\033[H', end='')
     sys.stdout.flush()
-    
+
 
 ADVENTURE_MAP = [
     # row 0
@@ -129,6 +129,7 @@ def get_room(room_coords):
     except IndexError:
         return None
 
+
 def is_in_room(room_coords, current_location):
     return room_coords[0] == current_location[0] and room_coords[1] == current_location[1]
 
@@ -150,7 +151,7 @@ def move_west(current_location):
 
 
 def verb_help(verb=None, obj=None):
-    return 'Words I know: ' + ', '.join(VERBS)
+    return 'Words I know: ' + ', '.join(VERB_HANDLERS.keys())
 
 
 def verb_carrying(verb=None, obj=None):
