@@ -1,7 +1,7 @@
 # Import:
 # * the `random` module so we can generate random numbers,
 # * the `math` module so we can perform some 'advanced' mathematical operations
-# * `select`, `sys`, `termios` and `tty` to manipulate the terminal
+# * `sys` to manipulate the terminal (for the screen clearing function)
 import random
 import sys
 
@@ -632,7 +632,7 @@ candlelight_counter = 0
 current_location = [7,1] # Room #57 - Path Through Iron Gate
 
 # Now we can start the actual game.
-#clear_screen()
+clear_screen()
 print('Haunted House')
 print('-------------')
 while True:
