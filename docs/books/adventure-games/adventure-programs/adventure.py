@@ -21,7 +21,6 @@ def clear_screen():
     print('\033[2J\033[H', end='')
     sys.stdout.flush()
 
-
 OBJ_AXE = 'axe'
 OBJ_SHOVEL = 'shovel'
 OBJ_ROPE = 'rope'
@@ -52,6 +51,32 @@ OBJ_BOOKS = 'books'
 OBJ_XZANFAR = 'xzanfar'
 OBJ_WALLS = 'walls'
 OBJ_SPELLS = 'spells'
+
+VERB_HELP = 'help'
+VERB_CARRYING = 'carrying?'
+VERB_GO = 'go'
+VERB_N = 'n'
+VERB_S = 's'
+VERB_W = 'w'
+VERB_E = 'e'
+VERB_U = 'u'
+VERB_D = 'd'
+VERB_GET = 'get'
+VERB_TAKE = 'take'
+VERB_OPEN = 'open'
+VERB_EXAMINE = 'examine'
+VERB_READ = 'read'
+VERB_SAY = 'say'
+VERB_DIG = 'dig'
+VERB_SWING = 'swing'
+VERB_CLIMB = 'climb'
+VERB_LIGHT = 'light'
+VERB_UNLIGHT = 'unlight'
+VERB_SPRAY = 'spray'
+VERB_USE = 'use'
+VERB_UNLOCK = 'unlock'
+VERB_LEAVE = 'leave'
+VERB_SCORE = 'score'
 
 FLAG_LIT_CANDLE = 'lit candle'
 
@@ -367,15 +392,15 @@ def verb_open(verb, current_location, obj=None):
         # Room 38 - Deep Cellar with Coffin
         message = 'That\'s creepy!'
     else:
-        message = 'You can\'t open that'
+        message = 'You can\'t {} that'.format(verb)
     return message
 
 def verb_examine(verb, current_location, obj=None):
     if obj == OBJ_COFFIN:
-        # delegate to 'open' handler
+        # delegate to VERB_OPEN handler
         message = verb_open(verb, obj)
     elif obj in (OBJ_BOOKS, OBJ_SCROLL):
-        # delegate to 'read' handler
+        # delegate to VERB_READ handler
         message = verb_read(verb, obj)
     elif is_in_room((4, 0), current_location) and obj == OBJ_COAT:
         # Room 32 - Cupboard with Hanging Coat - the coat has a key in it
@@ -395,9 +420,9 @@ def verb_examine(verb, current_location, obj=None):
         # Room 43 - Study with Desk & Hole in Wall
         message = 'There is something beyond...'
     elif not obj:
-        message = 'What should I examine?'
+        message = 'What should I {}?'.format(verb)
     else:
-        message = 'I don\'t know how to examine that...'
+        message = 'I don\'t know how to {} that...'.format(verb)
     return message
 
 def verb_read(verb, current_location, obj=None):
@@ -410,9 +435,9 @@ def verb_read(verb, current_location, obj=None):
     elif obj == OBJ_SCROLL and is_holding(OBJ_SCROLL):
         message = 'The script is in an alien tongue.'
     elif not obj:
-        message = 'What should I read?'
+        message = 'What should I {}?'.format(verb)
     else:
-        message = 'I don\'t know how to read that...'
+        message = 'I don\'t know how to {} that...'.format(verb)
     return message
 
 def verb_say(verb, current_location, obj=None):
@@ -439,7 +464,7 @@ def verb_dig(verb, current_location, obj=None):
             room = get_room(current_location)
             update_room_exits(room, 'nse') # east exit becomes available
     else:
-        message = 'You seriously expect me to to dig with my bare hands...?!?'
+        message = 'You seriously expect me to to {} with my bare hands...?!?'.format(verb)
     return message
 
 def verb_swing(verb, current_location, obj=None):
@@ -457,7 +482,7 @@ def verb_swing(verb, current_location, obj=None):
             update_room_description(room, 'Study with a Secret Room')
             message = 'You broke through a thin wall.'
     elif obj is None:
-        message = 'What should I swing?'
+        message = 'What should I {}?'.format(verb)
     else:
         message = 'I\'m not sure what swinging that would achieve...'
     return message
@@ -474,7 +499,7 @@ def verb_climb(verb, current_location, obj=None):
                 message = 'You see a thick forest and a cliff south.'
                 activate_flag(OBJ_ROPE)
     elif obj is None:
-        message = 'What should I climb?'
+        message = 'What should I {}?'.format(verb)
     else:
         message = 'I\'m not sure what climbing that would achieve...'
     return message
@@ -493,7 +518,7 @@ def verb_light(verb, current_location, obj=None):
                     message = 'It casts a flickering light'
                     activate_flag(FLAG_LIT_CANDLE)
     elif obj is None:
-        message = 'What should I light?'
+        message = 'What should I {}?'.format(verb)
     else:
         message = 'I\'m not sure what setting that on fire that would achieve...'
     return message
@@ -502,7 +527,7 @@ def verb_unlight(verb, current_location, obj=None):
     if is_active(FLAG_LIT_CANDLE):
         message = 'Extinguished.'
     elif obj is None:
-        message = 'What should I unlight?'
+        message = 'What should I {}?'.format(verb)
     else:
         message = 'I can\'t extinguish that...'
     return message
@@ -515,9 +540,9 @@ def verb_spray(verb, current_location, obj=None):
         else:
             message = 'Hisssss...'
     elif obj is None:
-        message = 'What should I spray?'
+        message = 'What should I {}?'.format(verb)
     else:
-        message = 'I can\'t spray that...'
+        message = 'I can\'t {} that...'.format(verb)
     return message
 
 def verb_use(verb, current_location, obj=None):
@@ -528,14 +553,14 @@ def verb_use(verb, current_location, obj=None):
             message = 'Whizz - sucked the ghosts up!'
             deactivate_flag(OBJ_GHOSTS)
     elif obj is None:
-        message = 'What should I use?'
+        message = 'What should I {}?'.format(verb)
     else:
-        message = 'I\'m not sure how to use that...'
+        message = 'I\'m not sure how to {} that...'.format(verb)
     return message
 
 def verb_unlock(verb, current_location, obj=None):
     if is_in_room((5, 3), current_location) and obj in (OBJ_DRAWER, OBJ_DESK):
-        # Room 43 - Study with Desk & Hole in Wall - delegate to 'open' handler
+        # Room 43 - Study with Desk & Hole in Wall - delegate to VERB_OPEN handler
         message = verb_open(verb, obj)
     elif is_in_room((3, 4), current_location) and not is_active(OBJ_DOOR) and is_holding(OBJ_KEY):
         # Room 28 - Hall By Thick Wooden Door
@@ -545,14 +570,14 @@ def verb_unlock(verb, current_location, obj=None):
         update_room_description(room, 'Huge Open Door')
         message = 'The key turns...!'
     elif obj is None:
-        message = 'What should I unlock?'
+        message = 'What should I {}?'.format(verb)
     else:
-        message = 'I\'m not sure how I could unlock that...'
+        message = 'I\'m not sure how I could {} that...'.format(verb)
     return message
 
 def verb_leave(verb, current_location, obj=None):
     if obj is None:
-        message = 'What should I leave?'
+        message = 'What should I {}?'.format(verb)
     elif not is_holding(obj):
         message = 'You\'re not carrying that.'
     else:
@@ -574,31 +599,31 @@ def verb_score(verb, current_location, obj=None):
 
 
 VERB_HANDLERS = {
-    'help': verb_help,
-    'carrying?': verb_carrying,
-    'go': verb_go,
+    VERB_HELP: verb_help,
+    VERB_CARRYING: verb_carrying,
+    VERB_GO: verb_go,
     'n': verb_go,
     's': verb_go,
     'w': verb_go,
     'e': verb_go,
     'u': verb_go,
     'd': verb_go,
-    'get': verb_get,
-    'take': verb_get,
-    'open': verb_open,
-    'examine': verb_examine,
-    'read': verb_read,
-    'say':verb_say,
-    'dig': verb_dig,
-    'swing': verb_swing,
-    'climb': verb_climb,
-    'light': verb_light,
-    'unlight': verb_unlight,
-    'spray': verb_spray,
-    'use': verb_use,
-    'unlock':verb_unlock,
-    'leave': verb_leave,
-    'score': None,
+    VERB_GET: verb_get,
+    VERB_TAKE: verb_get,
+    VERB_OPEN: verb_open,
+    VERB_EXAMINE: verb_examine,
+    VERB_READ: verb_read,
+    VERB_SAY:verb_say,
+    VERB_DIG: verb_dig,
+    VERB_SWING: verb_swing,
+    VERB_CLIMB: verb_climb,
+    VERB_LIGHT: verb_light,
+    VERB_UNLIGHT: verb_unlight,
+    VERB_SPRAY: verb_spray,
+    VERB_USE: verb_use,
+    VERB_UNLOCK:verb_unlock,
+    VERB_LEAVE: verb_leave,
+    VERB_SCORE: verb_score,
 }
 
 OBJECTS = [
@@ -622,14 +647,19 @@ for row in GAME_MAP:
         room_contents = get_room_contents(room)
         adventure_nouns.update(room_contents)
 
-adventure_nouns.update([NORTH, SOUTH, EAST, WEST, UP, DOWN,
-    OBJ_KEY,
-    OBJ_DOOR, OBJ_BATS, OBJ_GHOSTS, OBJ_DRAWER, OBJ_DESK, OBJ_COAT, OBJ_RUBBISH,
-    OBJ_COFFIN, OBJ_BOOKS, OBJ_XZANFAR, OBJ_WALLS, OBJ_SPELLS])
+adventure_nouns.update(
+    [
+        NORTH, SOUTH, EAST, WEST, UP, DOWN,
+        OBJ_KEY,
+        OBJ_DOOR, OBJ_BATS, OBJ_GHOSTS, OBJ_DRAWER, OBJ_DESK, OBJ_COAT, OBJ_RUBBISH,
+        OBJ_COFFIN, OBJ_BOOKS, OBJ_XZANFAR, OBJ_WALLS, OBJ_SPELLS
+    ]
+)
+
 inventory = set()
 
 candlelight_counter = 0
-current_location = [7,1] # Room #57 - Path Through Iron Gate
+current_location = [7, 1] # Room #57 - Path Through Iron Gate
 
 # Now we can start the actual game.
 clear_screen()
@@ -666,14 +696,15 @@ while True:
         else:
             message = 'There is no ' + obj
 
-    if is_active(OBJ_BATS) and is_in_room((1, 5), current_location) and not verb is 'spray' and random.randint(1, 3) is not 3:
+    print(message)
+
+    if is_active(OBJ_BATS) and is_in_room((1, 5), current_location) and not verb == VERB_SPRAY and random.randint(1, 3) is not 3:
         # bats are active in Room 13 - Rear Turret Room
         activate_flag(OBJ_BATS)
         message = 'BATS ATTACKING!!'
+        print(message)
     elif is_in_room((5, 4), current_location) and not is_active(DOWN) and random.randint(1,2) is 1:
         activate_flag(OBJ_GHOSTS)
-
-    print(message)
 
     if is_active(FLAG_LIT_CANDLE):
         candlelight_counter -= 1
