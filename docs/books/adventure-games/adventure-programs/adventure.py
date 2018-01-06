@@ -22,28 +22,70 @@ def clear_screen():
     sys.stdout.flush()
 
 
-ADVENTURE_MAP = [
+OBJ_AXE = 'axe'
+OBJ_SHOVEL = 'shovel'
+OBJ_ROPE = 'rope'
+OBJ_MATCHES = 'matches'
+OBJ_SCROLL = 'scroll'
+OBJ_COINS = 'coins'
+OBJ_VACUUM = 'vacuum'
+OBJ_BATTERIES = 'batteries'
+OBJ_STATUE = 'statue'
+OBJ_MAGICSPELLS = 'magic spells'
+OBJ_RING = 'ring'
+OBJ_CANDLESTICK = 'candlestick'
+OBJ_CANDLE = 'candle'
+OBJ_PAINTING = 'painting'
+OBJ_BOAT = 'boat'
+OBJ_GOBLET = 'goblet'
+OBJ_AEROSOL = 'aerosol'
+OBJ_KEY = 'key'
+OBJ_DOOR = 'door'
+OBJ_BATS = 'bats'
+OBJ_GHOSTS = 'ghosts'
+OBJ_DRAWER = 'drawer'
+OBJ_DESK = 'desk'
+OBJ_COAT = 'coat'
+OBJ_RUBBISH = 'rubbish'
+OBJ_COFFIN = 'coffin'
+OBJ_BOOKS = 'books'
+OBJ_XZANFAR = 'xzanfar'
+OBJ_WALLS = 'walls'
+OBJ_SPELLS = 'spells'
+
+FLAG_LIT_CANDLE = 'lit candle'
+
+NORTH = 'north'
+SOUTH = 'south'
+EAST = 'east'
+WEST = 'west'
+UP = 'up'
+DOWN = 'down'
+
+GAME_MAP_ROWS = 8
+GAME_MAP_COLS = GAME_MAP_ROWS
+GAME_MAP = [
     # row 0
     [
         # Rooms 0 - 7
         {'description': 'Dark Corner', 'objects': set(), 'exits': 'se'},
         {'description': 'Overgrown Garden', 'objects': set(), 'exits': 'we'},
-        {'description': 'By Large Woodpile', 'objects': {'axe',}, 'exits': 'we'},
+        {'description': 'By Large Woodpile', 'objects': {OBJ_AXE,}, 'exits': 'we'},
         {'description': 'Yard by Rubbish', 'objects': set(), 'exits': 'swe'},
-        {'description': 'Weedpatch', 'objects': {'shovel',}, 'exits': 'we'},
+        {'description': 'Weedpatch', 'objects': {OBJ_SHOVEL,}, 'exits': 'we'},
         {'description': 'Forest', 'objects': set(), 'exits,}': 'we'},
         {'description': 'Thick Forest', 'objects': set(), 'exits': 'swe'},
-        {'description': 'Blasted Tree', 'objects': {'rope',}, 'exits': 'ws'},
+        {'description': 'Blasted Tree', 'objects': {OBJ_ROPE,}, 'exits': 'ws'},
     ],
     # row 1
     [
         # Rooms 0 - 7
         {'description': 'Corner of House', 'objects': set(), 'exits': 'ns'},
         {'description': 'Entrance to Kitchen', 'objects': set(), 'exits': 'se'},
-        {'description': 'Kutchen & Grimy Cooker', 'objects': {'matches',}, 'exits': 'we'},
+        {'description': 'Kutchen & Grimy Cooker', 'objects': {OBJ_MATCHES,}, 'exits': 'we'},
         {'description': 'Scullery Door', 'objects': set(), 'exits': 'nw'},
         {'description': 'Room with Inches of Dust', 'objects': set(), 'exits': 'se'},
-        {'description': 'Rear Turret Room', 'objects': {'scroll',}, 'exits': 'w'},
+        {'description': 'Rear Turret Room', 'objects': {OBJ_SCROLL,}, 'exits': 'w'},
         {'description': 'Clearing by House', 'objects': set(), 'exits': 'ne'},
         {'description': 'Path', 'objects': set(), 'exits': 'nsw'},
     ],
@@ -52,7 +94,7 @@ ADVENTURE_MAP = [
         # Rooms 0 - 7
         {'description': 'Side of House', 'objects': set(), 'exits': 'ns'},
         {'description': 'Back of Hallway', 'objects': set(), 'exits': 'ns'},
-        {'description': 'Dark Alcove', 'objects': {'coins',}, 'exits': 'se'},
+        {'description': 'Dark Alcove', 'objects': {OBJ_COINS,}, 'exits': 'se'},
         {'description': 'Small Dark Room', 'objects': set(), 'exits': 'we'},
         {'description': 'Bottom of Spiral Staircase', 'objects': set(), 'exits': 'nwud'},
         {'description': 'Wide Passage', 'objects': set(), 'exits': 'sw'},
@@ -63,10 +105,10 @@ ADVENTURE_MAP = [
     [
         # Rooms 0 - 7
         {'description': 'Near Crumbling Wall', 'objects': set(), 'exits': 'n'},
-        {'description': 'Gloomy Passage', 'objects': {'vacuum',}, 'exits': 'ns'},
-        {'description': 'Pool of Light', 'objects': {'batteries',}, 'exits': 'nse'},
+        {'description': 'Gloomy Passage', 'objects': {OBJ_VACUUM,}, 'exits': 'ns'},
+        {'description': 'Pool of Light', 'objects': {OBJ_BATTERIES,}, 'exits': 'nse'},
         {'description': 'Impressive Vaulted Hallway', 'objects': set(), 'exits': 'we'},
-        {'description': 'Hall By Thick Wooden Door', 'objects': {'statue',}, 'exits': 'we'},
+        {'description': 'Hall By Thick Wooden Door', 'objects': {OBJ_STATUE,}, 'exits': 'we'},
         {'description': 'Trophy Room', 'objects': set(), 'exits': 'nsw'},
         {'description': 'Cellar with Barred Window', 'objects': set(), 'exits': 'ns'},
         {'description': 'Cliff Path', 'objects': set(), 'exits': 'ns'},
@@ -77,10 +119,10 @@ ADVENTURE_MAP = [
         {'description': 'Cupboard with Hanging Coat', 'objects': set(), 'exits': 's'}, # there is a hidden key in the coat
         {'description': 'Front Hall', 'objects': set(), 'exits': 'nse'},
         {'description': 'Sitting Room', 'objects': set(), 'exits': 'nsw'},
-        {'description': 'Secret Room', 'objects': {'magic spells',}, 'exits': 's'},
+        {'description': 'Secret Room', 'objects': {OBJ_MAGICSPELLS,}, 'exits': 's'},
         {'description': 'Steep Marble Stairs', 'objects': set(), 'exits': 'nsud'},
         {'description': 'Dining Room', 'objects': set(), 'exits': 'n'},
-        {'description': 'Deep Cellar with Coffin', 'objects': {'ring',}, 'exits': 'n'},
+        {'description': 'Deep Cellar with Coffin', 'objects': {OBJ_RING,}, 'exits': 'n'},
         {'description': 'Cliff Path', 'objects': set(), 'exits': 'ns'},
     ],
     # row 5
@@ -88,19 +130,19 @@ ADVENTURE_MAP = [
         # Rooms 0 - 7
         {'description': 'Closet', 'objects': set(), 'exits': 'ne'},
         {'description': 'Front Lobby', 'objects': set(), 'exits': 'nw'},
-        {'description': 'Library of Evil Books', 'objects': {'candlestick',}, 'exits': 'ne'},
-        {'description': 'Study with Desk & Hole in Wall', 'objects': {'candle',}, 'exits': 'w'},
+        {'description': 'Library of Evil Books', 'objects': {OBJ_CANDLESTICK,}, 'exits': 'ne'},
+        {'description': 'Study with Desk & Hole in Wall', 'objects': {OBJ_CANDLE,}, 'exits': 'w'},
         {'description': 'Weird Cobwebby Room', 'objects': set(), 'exits': 'nse'},
         {'description': 'Very Cold Chamber', 'objects': set(), 'exits': 'we'},
-        {'description': 'Spooky Room', 'objects': {'painting',}, 'exits': 'w'},
-        {'description': 'Cliff Path by Marsh', 'objects': {'boat',}, 'exits': 'ns'},
+        {'description': 'Spooky Room', 'objects': {OBJ_PAINTING,}, 'exits': 'w'},
+        {'description': 'Cliff Path by Marsh', 'objects': {OBJ_BOAT,}, 'exits': 'ns'},
     ],
     # row 6
     [
         # Rooms 0 - 7
         {'description': 'Rubble Strewn Verandah', 'objects': set(), 'exits': 'se'},
         {'description': 'Front Porch', 'objects': set(), 'exits': 'nsw'},
-        {'description': 'Front Tower', 'objects': {'goblet',}, 'exits': 'e'},
+        {'description': 'Front Tower', 'objects': {OBJ_GOBLET,}, 'exits': 'e'},
         {'description': 'Sloping Corridor', 'objects': set(), 'exits': 'we'},
         {'description': 'Upper Gallery', 'objects': set(), 'exits': 'nw'},
         {'description': 'Marsh by Wall', 'objects': set(), 'exits': 's'},
@@ -114,108 +156,166 @@ ADVENTURE_MAP = [
         {'description': 'Path Through Iron Gate', 'objects': set(), 'exits': 'nwe'},
         {'description': 'By Railings', 'objects': set(), 'exits': 'we'},
         {'description': 'Beneath Front Tower', 'objects': set(), 'exits': 'we'},
-        {'description': 'Debris from Crumbling Facade', 'objects': {'aerosol',}, 'exits': 'we'},
+        {'description': 'Debris from Crumbling Facade', 'objects': {OBJ_AEROSOL,}, 'exits': 'we'},
         {'description': 'Large Fallen Brickwork', 'objects': set(), 'exits': 'nwe'},
         {'description': 'Rotting Stone Arch', 'objects': set(), 'exits': 'nwe'},
         {'description': 'Crumbling Clifftop', 'objects': set(), 'exits': 'w'},
     ]
 ]
 
-def get_room(room_coords):
-    try:
-        row = room_coords[0]
-        col = room_coords[1]
-        return ADVENTURE_MAP[row][col]
-    except IndexError:
-        return None
-
-
 def is_in_room(room_coords, current_location):
     return room_coords[0] == current_location[0] and room_coords[1] == current_location[1]
 
 
-def move_north(current_location):
-    current_location[0] = max(0, current_location[0] - 1)
+def get_room(room_coords):
+    try:
+        row = room_coords[0]
+        col = room_coords[1]
+        return GAME_MAP[row][col]
+    except IndexError:
+        return None
 
 
-def move_south(current_location):
-    current_location[0] = min(MAP_ROWS - 1, current_location[0] + 1)
+def get_room_exits(room):
+    return room.get('exits', '')
 
 
-def move_east(current_location):
-    current_location[1] = min(MAP_COLS - 1, current_location[1] + 1)
+def update_room_exits(room, exits):
+    room['exits'] = exits
 
 
-def move_west(current_location):
-    current_location[1] = max(0, current_location[1] - 1)
+def get_room_description(room):
+    return room.get('description', '')
 
 
-def verb_help(verb=None, obj=None):
+def update_room_description(room, description):
+    room['description'] = description
+
+
+def get_room_contents(room):
+    return room.get('objects', set())
+
+
+def room_contains(room, obj):
+    return obj in get_room_contents(room)
+
+
+def add_object_to_room(room, obj):
+    get_room_contents(room).add(obj)
+
+
+def remove_object_from_room(room, obj):
+    get_room_contents(room).remove(obj)
+
+
+def is_active(flag):
+    return game_flags.get(flag, False)
+
+
+def set_flag_state(flag, is_active):
+    game_flags[flag] = True
+
+
+def activate_flag(flag):
+    set_flag_state(flag, True)
+
+
+def deactivate_flag(flag):
+    set_flag_state(flag, False)
+
+
+def is_holding(obj):
+    return obj in inventory
+
+
+def drop_item(obj, room):
+    if obj in inventory:
+        inventory.remove(obj)
+        add_object_to_room(room, obj)
+
+
+def take_item(obj, room):
+    if room_contains(room, obj):
+        remove_object_from_room(room, obj)
+        inventory.add(obj)
+
+
+def move(current_location, displacement):
+    new_row = current_location[0] + displacement[0]
+    new_col = current_location[1] + displacement[1]
+    new_row = min(GAME_MAP_ROWS - 1, max(0, new_row))
+    new_col = min(GAME_MAP_COLS - 1, max(0, new_col))
+    current_location[0] = new_row
+    current_location[1] = new_col
+
+
+def verb_help(verb, current_location, obj=None):
     return 'Words I know: ' + ', '.join(VERB_HANDLERS.keys())
 
 
-def verb_carrying(verb=None, obj=None):
+def verb_carrying(verb, current_location, obj=None):
     if not inventory:
         return 'You are carrying nothing.'
     return 'You are carrying: '+ ', '.join([item for item in inventory])
 
 
-def verb_go(verb=None, obj=None):
+def verb_go(verb, current_location, obj=None):
     room = get_room(current_location)
-    room_exits = room.get('exits', '')
-    lookup_key = verb if obj is None else obj[0]
+    room_exits = get_room_exits(room)
+    direction = verb if obj is None else obj[0]
     message = 'OK'
-    if lookup_key not in room_exits:
+    if direction not in room_exits:
         message = 'You can\'t go that way'
     else:
-        # direction is n=1, s=2, w=3, e=4, u=5 and d=5, so...
-        direction_lookup = {'n': 1, 's': 2, 'w': 3, 'e': 4, 'u': 5, 'd': 6}
-        direction = 0
-        direction  = direction_lookup.get(lookup_key, 0)
-
         # special handling for up and down conversion to the 2D map
         # for certain rooms - note that though some rooms have 'up '
-        # and 'down' exits available, they actually translate to
+        # and DOWN exits available, they actually translate to
         # n/s/e/w directions on the map
-        if direction == 5 or direction == 6:
+        if direction == 'u' or direction == 'd':
             # going up or down?
-            if current_location[0] == 2 and current_location[1] == 4:
+            if is_in_room((2, 4), current_location):
                 # Room 20 - spiral staircase
-                direction = 1 if direction == 5 else direction
-                direction = 3 if direction == 6 else direction
-            elif current_location[0] == 2 and current_location[1] == 6:
+                # UP is actually a NORTH move on the map
+                direction = 'n' if direction == 'u' else direction
+                # DOWN is actually a WEST move on the map
+                direction = 'w' if direction == 'd' else direction
+            elif is_in_room((2, 6), current_location):
                 # Room 22 - slippery steps
-                direction = 3 if direction == 5 else direction
-                direction = 2 if direction == 6 else direction
-            elif current_location[0] == 4 and current_location[1] == 4:
+                # UP is actually a WEST move on the map
+                direction = 'w' if direction == 'u' else direction
+                # DOWN is actually a SOUTH move on the map
+                direction = 's' if direction == 'd' else direction
+            elif is_in_room((4, 4), current_location):
                 # Room 36 - steep marble steps
-                direction = 2 if direction == 5 else direction
-                direction = 1 if direction == 6 else direction
+                # UP is actually a SOUTH move on the map
+                direction = 's' if direction == 'u' else direction
+                # DOWN is actually a NORTH move on the map
+                direction = 'n' if direction == 'd' else direction
         # special handling for 'activated' circumstances in rooms
-        if 'rope' in inventory:
+        if is_holding(OBJ_ROPE):
             message = 'Crash! you fell out of the tree!'
-            inventory.remove('rope')
-        elif current_location[0] == 6 and current_location[1] == 4 and adventure_flags.get('ghosts', False):
+            inventory.remove(OBJ_ROPE)
+        elif is_in_room((6, 4), current_location) and is_active(OBJ_GHOSTS):
             # Room 52 - upper gallery
             message = 'Ghosts will not let you move.'
-        elif current_location[0] == 5 and current_location[1] == 5 and 'painting' in inventory and not adventure_flags.get('xzanfar', False):
+        elif is_in_room((5, 6), current_location) and is_holding(OBJ_PAINTING) and not is_active(OBJ_XZANFAR):
             # Room 45 - very cold chamber - you need the painting
             message = 'A magical barrier to the west.'
-        elif current_location[0] == 3 and current_location[1] == 2 and not adventure_flags.get('lit candle', False) and direction in (1, 4):
+        elif is_in_room((3, 2), current_location) and not is_active(FLAG_LIT_CANDLE) and direction in 'ne':
             # Room 26 - pool of light - can't go north or east without a light
             message = 'You need a light.'
-        elif not 'boat' in inventory and current_location[0] == 3 and current_location[1] == 2:
-            # Room 54 - marsh, no boat in inventory TODO
+        elif is_in_room((3, 2), current_location) and not is_holding(OBJ_BOAT):
+            # Room 54 - marsh, no boat in inventory
             message = 'You\'re stuck!'
-        elif 'boat' in inventory and (
-                (current_location[0] == 6 and current_location[1] == 5) or
-                (current_location[0] == 6 and current_location[1] == 6) or
-                (current_location[0] == 6 and current_location[1] == 7) or
-                (current_location[0] == 5 and current_location[1] == 7)
+        elif is_holding(OBJ_BOAT) and (
+                is_in_room((6, 5), current_location) or
+                is_in_room((6, 6), current_location) or
+                is_in_room((6, 7), current_location) or
+                is_in_room((5, 7), current_location)
         ):
-            # not one of Rooms 53 (marsh by wall), 54 (marsh), 55 (soggy path) or 
+            # not one of Rooms 53 (marsh by wall), 54 (marsh), 55 (soggy path) or
             # 47 (cliff path by marsh), and boat is in inventory
-            message = 'You can\'t carry a boat!'
+            message = 'You can\'t carry a {}!'.format(OBJ_BOAT)
         elif (
                 (current_location[0] == 3 and current_location[1] >= 2 and current_location[1] <= 6)
         ):
@@ -223,78 +323,75 @@ def verb_go(verb=None, obj=None):
             # trophy room, cellar with barred window)
             message = 'Too dark to move'
         else:
-            if direction == 1:
-                move_north(current_location)
-            elif direction == 2:
-                move_south(current_location)
-            elif direction == 3:
-                move_west(current_location)
-            elif direction == 4:
-                move_east(current_location)
-            else:
-                message = 'You can\'t move that way.'
-            if is_in_room((5, 1), current_location) and adventure_flags['up']:
+            displacement_lookup = {
+                'n':(-1, 0),
+                's':(1, 0),
+                'w':(0, -1),
+                'e':(0, 1),
+            }
+            displacement = displacement_lookup.get(direction, 0)
+            move(current_location, displacement)
+
+            if is_in_room((5, 1), current_location) and is_active(UP):
                 # room 41 - front lobby and door is open
-                room = ADVENTURE_MAP[5][1]
-                room['exits'] = 'nw' # south exit (front door) is no longer available
-                adventure_flags['up'] = False # flag that the door is shut
+                room = get_room(current_location)
+                update_room_exits(room, 'nw') # south exit (front door) is no longer available
+                deactivate_flag(UP) # flag that the door is shut
                 message = 'The door slams shut!'
     return message
 
 
-def verb_get(verb=None, obj=None):
+def verb_get(verb, current_location, obj=None):
     message = 'I don\'t know what ' + obj + ' is.'
-    if obj in inventory:
+    if is_holding(obj):
         message = 'You already have it.'
     elif obj in adventure_nouns:
         room = get_room(current_location)
-        room_objects = room.get('objects', None)
-        if obj not in room_objects:
+        if not room_contains(room, obj):
             message = 'It isn\'t here.'
         else:
-            inventory.add(obj)
-            room_objects.remove(obj)
+            take_item(obj, room)
             message = 'You have the ' + obj
     return message
 
 
-def verb_open(verb=None, obj=None):
-    if is_in_room((5, 3), current_location) and obj in ('drawer', 'desk'):
+def verb_open(verb, current_location, obj=None):
+    if is_in_room((5, 3), current_location) and obj in (OBJ_DRAWER, OBJ_DESK):
         # Room 43 - Study with Desk & Hole in Wall
-        adventure_flags['candle'] = False  # TODO -is this flag correct...?
-        message = 'The drawer is open'
-    elif is_in_room((3, 4), current_location) and obj == 'door':
+        deactivate_flag(OBJ_CANDLE)  # TODO -is this flag correct...?
+        message = 'The {} is open'.format(OBJ_DRAWER)
+    elif is_in_room((3, 4), current_location) and obj == OBJ_DOOR:
         # Room 28 - hall by thick wooden door
         message = 'It\'s locked'
-    elif is_in_room((3, 4), current_location) and obj == 'coffin':
+    elif is_in_room((3, 4), current_location) and obj == OBJ_COFFIN:
         # Room 38 - Deep Cellar with Coffin
         message = 'That\'s creepy!'
     else:
         message = 'You can\'t open that'
     return message
 
-def verb_examine(verb=None, obj=None):
-    if obj == 'coffin':
+def verb_examine(verb, current_location, obj=None):
+    if obj == OBJ_COFFIN:
         # delegate to 'open' handler
         message = verb_open(verb, obj)
-    elif obj in ('books', 'scroll'):
+    elif obj in (OBJ_BOOKS, OBJ_SCROLL):
         # delegate to 'read' handler
         message = verb_read(verb, obj)
-    elif is_in_room((4, 0), current_location) and obj == 'coat':
+    elif is_in_room((4, 0), current_location) and obj == OBJ_COAT:
         # Room 32 - Cupboard with Hanging Coat - the coat has a key in it
         # which is found upon examination
-        if adventure_flags.get('key', False):
-            message = 'It\'s just a coat'
+        if is_active(OBJ_KEY):
+            message = 'It\'s just a {}'.format(OBJ_COAT)
         else:
             room = get_room(current_location)
-            room['objects'].add('key')
-            adventure_flags['key'] = True
+            add_object_to_room(room, OBJ_KEY)
+            activate_flag(OBJ_KEY)
             message = 'There\'s something here!'
-    elif obj == 'rubbish':
+    elif obj == OBJ_RUBBISH:
         message = 'That\'s disgusting!'
-    elif obj in ('desk', 'drawer'):
+    elif obj in (OBJ_DESK, OBJ_DRAWER):
         message = 'There\'s a drawer'
-    elif is_in_room((5, 3), current_location) and obj == 'walls':
+    elif is_in_room((5, 3), current_location) and obj == OBJ_WALLS:
         # Room 43 - Study with Desk & Hole in Wall
         message = 'There is something beyond...'
     elif not obj:
@@ -303,14 +400,14 @@ def verb_examine(verb=None, obj=None):
         message = 'I don\'t know how to examine that...'
     return message
 
-def verb_read(verb=None, obj=None):
-    if is_in_room((5, 2), current_location) and obj == 'books':
+def verb_read(verb, current_location, obj=None):
+    if is_in_room((5, 2), current_location) and obj == OBJ_BOOKS:
         # Room 42 - Library of Evil Books
         message = 'They are demonic works'
-    elif obj in ('spells', 'magic spells') and 'magic spells' in inventory and not adventure_flags.get('xzanfar', False):
+    elif obj in (OBJ_SPELLS, OBJ_MAGICSPELLS) and is_holding(OBJ_MAGICSPELLS) and not is_active(OBJ_XZANFAR):
         # Room 42 - Library of Evil Books
-        message = 'Use this word with care: "xzanfar".'
-    elif 'scroll' in inventory and obj == 'scroll':
+        message = 'Use this word with care: "{}".'.format(OBJ_XZANFAR)
+    elif obj == OBJ_SCROLL and is_holding(OBJ_SCROLL):
         message = 'The script is in an alien tongue.'
     elif not obj:
         message = 'What should I read?'
@@ -318,90 +415,91 @@ def verb_read(verb=None, obj=None):
         message = 'I don\'t know how to read that...'
     return message
 
-def verb_say(verb=None, obj=None):
+def verb_say(verb, current_location, obj=None):
     if not obj:
         message = 'Say... what, exactly?'
     else:    
         message = 'OK: "{}"!'.format(obj)
-        if 'magic spells' in inventory and obj == 'xzanfar':
+        if obj == OBJ_XZANFAR and is_holding(OBJ_MAGICSPELLS):
             message = '* Magic Occurs *'
-            if is_in_room((5,5), current_location):
-                # if we are in room 45 - Very Cold Chamber 'xzanfar' spell is effective
-                adventure_flags['xzanfar'] = True
+            if is_in_room((5, 5), current_location):
+                # if we are in room 45 - Very Cold Chamber OBJ_XZANFAR spell is effective
+                activate_flag(OBJ_XZANFAR)
             else:
-                # otherwise the 'xzanfar' spell moves the player to a random room
-                current_location = [random.randint(0,MAP_ROWS), random.randint(0,MAP_COLS)]
+                # otherwise the OBJ_XZANFAR spell moves the player to a random room
+                current_location[0] = random.randint(0,GAME_MAP_ROWS - 1)
+                current_location[1] = random.randint(0,GAME_MAP_COLS - 1)
     return message
 
-def verb_dig(verb=None, obj=None):
-    if 'shovel' in inventory:
+def verb_dig(verb, current_location, obj=None):
+    if is_holding(OBJ_SHOVEL):
         message = 'You made a hole'
-        if is_in_room((3,4), current_location):
+        if is_in_room((3, 4), current_location):
             # if we are in room 45 - Cellar with Barred Window
             room = get_room(current_location)
-            room['exits'] = 'nse' # east exit becomes available
+            update_room_exits(room, 'nse') # east exit becomes available
     else:
-        message = 'I don\'t have anything to dig with...'
+        message = 'You seriously expect me to to dig with my bare hands...?!?'
     return message
 
-def verb_swing(verb=None, obj=None):
-    if 'rope' not in inventory and is_in_room((0,7), current_location):
+def verb_swing(verb, current_location, obj=None):
+    if not is_holding(OBJ_ROPE) and is_in_room((0,7), current_location):
         message = 'This is no time to play games'
         message = 'You don\'t have ' + obj
-    elif obj == 'rope' and 'rope' in inventory:
+    elif obj == OBJ_ROPE and is_holding(OBJ_ROPE):
         message = 'You swung it'
-    elif obj == 'axe' and 'axe' in inventory:
+    elif obj == OBJ_AXE and is_holding(OBJ_AXE):
         message = 'Whoosh!'
-        if is_in_room((0,7), current_location):
+        if is_in_room((0, 7), current_location):
             # Room 43 - Study with Desk & Hole in Wall
             room = get_room(current_location)
-            room['exits'] = 'wn' # north exit becomes available
-            room['description'] = 'Study with a Secret Room'
-            message = 'You broke through a thin wall'
+            update_room_exits(room, 'wn') # north exit becomes available
+            update_room_description(room, 'Study with a Secret Room')
+            message = 'You broke through a thin wall.'
     elif obj is None:
         message = 'What should I swing?'
     else:
         message = 'I\'m not sure what swinging that would achieve...'
     return message
 
-def verb_climb(verb=None, obj=None):
-    if obj == 'rope':
-        if 'rope' in inventory:
+def verb_climb(verb, current_location, obj=None):
+    if obj == OBJ_ROPE:
+        if is_holding(OBJ_ROPE):
             message = 'It isn\'t attached to anything'
-        elif is_in_room((0,7), current_location):
-            if adventure_flags.get('rope', False):
+        elif is_in_room((0, 7), current_location):
+            if is_active(OBJ_ROPE):
                 message = 'Going down!'
-                adventure_flags['rope'] = False
+                deactivate_flag(OBJ_ROPE)
             else:
                 message = 'You see a thick forest and a cliff south.'
-                adventure_flags['rope'] = True
+                activate_flag(OBJ_ROPE)
     elif obj is None:
         message = 'What should I climb?'
     else:
         message = 'I\'m not sure what climbing that would achieve...'
     return message
 
-def verb_light(verb=None, obj=None):
-    if obj == 'candle':
-        if not 'candle' in inventory:        
+def verb_light(verb, current_location, obj=None):
+    if obj == OBJ_CANDLE:
+        if not is_holding(OBJ_CANDLE):        
             message = 'You don\'t have a ' + obj
         else:
-            if not 'candlestick' in inventory:
+            if not is_holding(OBJ_CANDLESTICK):
                 message = 'It will burn your hands.'
             else:
-                if not 'matches' in inventory:
+                if not is_holding(OBJ_MATCHES):
                     message = 'You have nothing to light it with.'
                 else:
                     message = 'It casts a flickering light'
-                    adventure_flags['lit candle'] = True
+                    activate_flag(FLAG_LIT_CANDLE)
     elif obj is None:
         message = 'What should I light?'
     else:
         message = 'I\'m not sure what setting that on fire that would achieve...'
     return message
 
-def verb_unlight(verb=None, obj=None):
-    if adventure_flags.get('lit candle', False):
+def verb_unlight(verb, current_location, obj=None):
+    if is_active(FLAG_LIT_CANDLE):
         message = 'Extinguished.'
     elif obj is None:
         message = 'What should I unlight?'
@@ -409,11 +507,11 @@ def verb_unlight(verb=None, obj=None):
         message = 'I can\'t extinguish that...'
     return message
 
-def verb_spray(verb=None, obj=None):
-    if obj in ('bats', 'aerosol') and 'aerosol' in inventory:
-        if adventure_flags.get('bats', False):
+def verb_spray(verb, current_location, obj=None):
+    if obj in (OBJ_BATS, OBJ_AEROSOL) and is_holding(OBJ_AEROSOL):
+        if is_active(OBJ_BATS):
             message = 'Pffft! Got those pesky bats!'
-            adventure_flags['bats'] = False
+            deactivate_flag(OBJ_BATS)
         else:
             message = 'Hisssss...'
     elif obj is None:
@@ -422,29 +520,29 @@ def verb_spray(verb=None, obj=None):
         message = 'I can\'t spray that...'
     return message
 
-def verb_use(verb=None, obj=None):
-    if obj == 'vacuum' and 'vacuum' in inventory and 'vacuum' in inventory:
+def verb_use(verb, current_location, obj=None):
+    if obj == OBJ_VACUUM and is_holding(OBJ_VACUUM) and is_holding(OBJ_BATTERIES):
         message = 'Switched on.'
-        adventure_flags['vacuum'] = True
-        if adventure_flags.get('ghosts', False):
-            message = 'Whizz - vacuumed the ghosts up!'
-            adventure_flags['ghosts'] = False
+        activate_flag(OBJ_VACUUM)
+        if is_active(OBJ_GHOSTS):
+            message = 'Whizz - sucked the ghosts up!'
+            deactivate_flag(OBJ_GHOSTS)
     elif obj is None:
         message = 'What should I use?'
     else:
         message = 'I\'m not sure how to use that...'
     return message
 
-def verb_unlock(verb=None, obj=None):
-    if is_in_room((5,3), current_location) and obj in ('drawer', 'desk'):
+def verb_unlock(verb, current_location, obj=None):
+    if is_in_room((5, 3), current_location) and obj in (OBJ_DRAWER, OBJ_DESK):
         # Room 43 - Study with Desk & Hole in Wall - delegate to 'open' handler
         message = verb_open(verb, obj)
-    elif is_in_room((3,4), current_location) and not adventure_flags.get('door', False) and 'key' in inventory:
+    elif is_in_room((3, 4), current_location) and not is_active(OBJ_DOOR) and is_holding(OBJ_KEY):
         # Room 28 - Hall By Thick Wooden Door
-        adventure_flags['door'] = True
+        activate_flag(OBJ_DOOR)
         room = get_room(current_location)
-        room['exits'] = 'sew' # south exit becomes available
-        room['description'] = 'Huge Open Door'
+        update_room_exits('sew') # south exit becomes available
+        update_room_description(room, 'Huge Open Door')
         message = 'The key turns...!'
     elif obj is None:
         message = 'What should I unlock?'
@@ -452,22 +550,21 @@ def verb_unlock(verb=None, obj=None):
         message = 'I\'m not sure how I could unlock that...'
     return message
 
-def verb_leave(verb=None, obj=None):
+def verb_leave(verb, current_location, obj=None):
     if obj is None:
         message = 'What should I leave?'
-    if obj in inventory:
-        inventory.remove(obj)
-        room = get_room(current_location)
-        room['objects'].add(obj)
-        message = 'Done.'
-    else:
+    elif not is_holding(obj):
         message = 'You\'re not carrying that.'
+    else:
+        room = get_room(current_location)
+        drop_item(obj, room)
+        message = 'Done.'
     return message
 
-def verb_score(verb=None, obj=None):
+def verb_score(verb, current_location, obj=None):
     score = len(inventory)
-    if score == 17 and not 'boat' in inventory:
-        if is_in_room((7,1), current_location):
+    if score == 17 and not is_holding(OBJ_BOAT):
+        if is_in_room((7, 1), current_location):
             # in room 57 - Path Through Iron Gate
             message = 'Double score for reaching here!'
             score *= 2
@@ -506,49 +603,46 @@ VERB_HANDLERS = {
 
 OBJECTS = [
     # These 18 objects are 'gettable'
-    'painting', 'ring', 'magic spells', 'goblet', 'scroll', 'coins', 'statue', 'candlestick',
-    'matches', 'vacuum', 'batteries', 'shovel', 'axe', 'rope', 'boat', 'aerosol', 'candle', 'key',
+    OBJ_PAINTING, OBJ_RING, OBJ_MAGICSPELLS, OBJ_GOBLET, OBJ_SCROLL, OBJ_COINS, OBJ_STATUE, OBJ_CANDLESTICK,
+    OBJ_MATCHES, OBJ_VACUUM, OBJ_BATTERIES, OBJ_SHOVEL, OBJ_AXE, OBJ_ROPE, OBJ_BOAT, OBJ_AEROSOL, OBJ_CANDLE, OBJ_KEY,
     # These 19 objects are not 'gettable' - note that they are not all actually 'objects'
     # but this is how the parsing is set up to work
-    'north', 'south', 'east', 'west', 'up', 'down',
-    'door', 'bats', 'ghosts', 'drawer', 'desk', 'coat', 'rubbish',
-    'coffin', 'books', 'xzanfar', 'walls', 'spells',
+    NORTH, SOUTH, EAST, WEST, UP, DOWN,
+    OBJ_DOOR, OBJ_BATS, OBJ_GHOSTS, OBJ_DRAWER, OBJ_DESK, OBJ_COAT, OBJ_RUBBISH,
+    OBJ_COFFIN, OBJ_BOOKS, OBJ_XZANFAR, OBJ_WALLS, OBJ_SPELLS,
 ]
 
-adventure_flags = dict(zip(OBJECTS, [False,] * len(OBJECTS)))
-for x in ['ring', 'candle', 'up', 'bats', 'drawer']:
-    adventure_flags[x] = True
-
-MAP_ROWS = 8
-MAP_COLS = MAP_ROWS
+game_flags = dict(zip(OBJECTS, [False,] * len(OBJECTS)))
+for x in [OBJ_RING, OBJ_CANDLE, UP, OBJ_BATS, OBJ_DRAWER]:
+    activate_flag(x)
 
 adventure_nouns = set()
-for row in ADVENTURE_MAP:
+for row in GAME_MAP:
     for room in row:
-        room_objects = room.get('objects', set())
-        adventure_nouns.update(room_objects)
+        room_contents = get_room_contents(room)
+        adventure_nouns.update(room_contents)
 
-adventure_nouns.update(['north', 'south', 'east', 'west', 'up', 'down',
-    'key',
-    'door', 'bats', 'ghosts', 'drawer', 'desk', 'coat', 'rubbish',
-    'coffin', 'books', 'xzanfar', 'walls', 'spells'])
+adventure_nouns.update([NORTH, SOUTH, EAST, WEST, UP, DOWN,
+    OBJ_KEY,
+    OBJ_DOOR, OBJ_BATS, OBJ_GHOSTS, OBJ_DRAWER, OBJ_DESK, OBJ_COAT, OBJ_RUBBISH,
+    OBJ_COFFIN, OBJ_BOOKS, OBJ_XZANFAR, OBJ_WALLS, OBJ_SPELLS])
 inventory = set()
 
 candlelight_counter = 0
 current_location = [7,1] # Room #57 - Path Through Iron Gate
-message = 'OK'
 
 # Now we can start the actual game.
-clear_screen()
+#clear_screen()
 print('Haunted House')
 print('-------------')
 while True:
+    message = 'OK'
     print('Your location:')
-    room = ADVENTURE_MAP[current_location[0]][current_location[1]]
-    print(room.get('description'))
+    room = get_room(current_location)
+    print(get_room_description(room))
     print('Exits:')
-    print(', '.join(x.upper() for x in room.get('exits')))
-    room_objects = room.get('objects')
+    print(', '.join(x.upper() for x in get_room_exits(room)))
+    room_objects = get_room_contents(room)
     if room_objects:
         print('You can see ' + ', '.join(room_objects) + ' here')
     print('='*20)
@@ -568,26 +662,26 @@ while True:
         message = 'I don\'t understand.'
     else:
         if len(words) == 1 or (obj and obj in adventure_nouns):
-            message = verb_handler(verb, obj)
+            message = verb_handler(verb, current_location, obj=obj)
         else:
             message = 'There is no ' + obj
 
-    if adventure_flags.get('bats', False) and is_in_room((1, 5), current_location) and not verb is 'spray' and random.randint(1, 3) is not 3:
+    if is_active(OBJ_BATS) and is_in_room((1, 5), current_location) and not verb is 'spray' and random.randint(1, 3) is not 3:
         # bats are active in Room 13 - Rear Turret Room
-        adventure_flags['bats'] = True
+        activate_flag(OBJ_BATS)
         message = 'BATS ATTACKING!!'
-    elif is_in_room((5, 4), current_location) and not adventure_flags.get('down', False) and random.randint(1,2) is 1:
-        adventure_flags['ghosts'] = True
+    elif is_in_room((5, 4), current_location) and not is_active(DOWN) and random.randint(1,2) is 1:
+        activate_flag(OBJ_GHOSTS)
 
     print(message)
 
-    if adventure_flags.get('lit candle', False):
+    if is_active(FLAG_LIT_CANDLE):
         candlelight_counter -= 1
         if candlelight_counter < 10:
-            message = 'Your candle is waning...'
+            message = 'Your {} is waning...'.format(OBJ_CANDLE)
             if candlelight_counter < 1:
-                adventure_flags['lit candle'] = False
-                message = 'Your candle is out!'
+                deactivate_flag(FLAG_LIT_CANDLE)
+                message = 'Your {} is out!'.format(OBJ_CANDLE)
         print(message)
 
     print()
