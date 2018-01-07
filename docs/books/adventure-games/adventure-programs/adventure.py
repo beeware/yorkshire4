@@ -5,22 +5,18 @@
 import random
 import sys
 
-# Define a utility method to clear the screen.
-# This uses "ANSI Escape Sequences" - special combinations of
-# characters that are understood by the terminal, but are difficult
-# (or impossible) to type on a keyboard. `\033[` is the
-# "escape sequence"; the characters after the escape sequnce are
-# interpreted as commands. In this case, we're using:
-#   2J - clear screen; and
-#   H - move the cursor to the Home position (top left corner)
-#
-# For more details about ANSI escape sequences, see:
-#     https://en.wikipedia.org/wiki/ANSI_escape_code
-#
-def clear_screen():
-    print('\033[2J\033[H', end='')
-    sys.stdout.flush()
+# Here we define a number of 'constants' - these are variables which store values 
+# that are used throughout the game, and which don't change. This means we can use
+# the variable name, rather than typing in the value each time. This has a couple
+# of advantages:
+#  * one is that if we typed in everything manually, there is a chance we could
+#    mis-type it, and break the code - for example, if we mis-typed the word 
+#    'xzanfar' somewhere, it's likely that the playecould never finish the game
+#  * another is that if there is a spelling mistake, or we want to change a word,
+#    we only need to change it in one place, and it takes effect everywhere. For
+#    example, we could easily change 'xzanfar' to 'abracadabra'
 
+# These are the objects/items in the game
 OBJ_AXE = 'axe'
 OBJ_SHOVEL = 'shovel'
 OBJ_ROPE = 'rope'
@@ -52,6 +48,7 @@ OBJ_XZANFAR = 'xzanfar'
 OBJ_WALLS = 'walls'
 OBJ_SPELLS = 'spells'
 
+# These are the verbs/commands the player can use in the game
 VERB_HELP = 'help'
 VERB_CARRYING = 'carrying?'
 VERB_GO = 'go'
@@ -78,8 +75,11 @@ VERB_UNLOCK = 'unlock'
 VERB_LEAVE = 'leave'
 VERB_SCORE = 'score'
 
+# these are special 'flags', which are used to keep track of whether
+# something has happened (or is active) or not
 FLAG_LIT_CANDLE = 'lit candle'
 
+# these are the directions
 NORTH = 'north'
 SOUTH = 'south'
 EAST = 'east'
@@ -87,8 +87,83 @@ WEST = 'west'
 UP = 'up'
 DOWN = 'down'
 
+# this next part is quite large and defines the the game map
+# the map is on an 8 x 8 grid (8 rows, and 8 columns)
 GAME_MAP_ROWS = 8
 GAME_MAP_COLS = GAME_MAP_ROWS
+
+# The Game Map:
+#                          NORTH
+#
+#           0    1    2    3    4    5    6    7
+#         +----+----+----+----+----+----+----+----+
+#         |                                       |
+#      0  | 0    1    2    3    4    5    6    7  |
+#         |                                       |
+#         +    +----+----+    +----+----+         +
+#         |    |              |         |         |
+#      1  | 8  | 9    10   11 | 12   13 | 14   15 |
+#         |    |              |         |         |
+#         +    +    +----+----+VVVV+----+----+    +
+#         |    |    |         <    |         |    |
+#      2  | 16 | 17 | 18   19 < 20 | 21   22 | 23 |
+#         |    |    |         <    |         |    |
+#         +    +    +    +----+----+    +VVVV+    +
+#         |    |    |                   |    $    |
+#      3  | 24 | 25 | 26   27   28   29 | 30 $ 31 |
+#         |    |    |                   |    $    |
+# WEST    +----+    +    +----+%%%%+    +    +    +    EAST
+#         |    |         |    |^^^^|    |    |    |
+#      4  | 32 | 33   34 | 35 | 36 | 37 | 38 | 39 |
+#         |    |         |    |    |    |    |    |
+#         +    +    +    +====+    +----+----+    +
+#         |         |                        |    |
+#      5  | 40   41 | 42   43   44   45   46 | 47 |
+#         |         |                        |    |
+#         +----+    +----+----+    +----+----+    +
+#         |         |              |              |
+#      6  | 48   49 | 50   51   52 | 53   54   55 |
+#         |         |              |              |
+#         |         +----+----+----+              +
+#         |                                       |
+#      7  | 56   57   58   59   60   61   62   63 |
+#         |                                       |
+#         +----+----+----+----+----+----+----+----+
+#
+#                          SOUTH
+#
+# LEGEND:
+#     ====      - false wall
+#
+#     %%%%      - locked door
+#
+#        $
+#        $      - barred window
+#        $
+#
+#     ^^^^      - downward exit (in direction of arrows)
+#
+#     VVVV      - downward exit (in direction of arrows)
+#
+#     <
+#     <         - downward exit (in direction of arrows)
+#     <
+#
+#     >
+#     >         - downward exit (in direction of arrows)
+#     >
+#
+#
+# Note that some exits are up or down (rooms 20, 22 and 36), but these are 
+# translated into north, south, east or west directions by the game if the 
+# player uses  one of those exits so that it makes sense on the map.
+#
+# This array defines all the rooms in the map, including the objects they contain
+# and what exits are available. Note that while this is defined as a 'constant'
+# it will actually be modified occasionally during the game as the player picks 
+# up and  leaves objects, or events occur which may change the description of 
+# the room, or even what exits are available (if the player unlocks a door, 
+# for example)
 GAME_MAP = [
     # row 0
     [
@@ -104,7 +179,7 @@ GAME_MAP = [
     ],
     # row 1
     [
-        # Rooms 0 - 7
+        # Rooms 8 - 15
         {'description': 'Corner of House', 'objects': set(), 'exits': 'ns'},
         {'description': 'Entrance to Kitchen', 'objects': set(), 'exits': 'se'},
         {'description': 'Kutchen & Grimy Cooker', 'objects': {OBJ_MATCHES,}, 'exits': 'we'},
@@ -116,7 +191,7 @@ GAME_MAP = [
     ],
     # row 2
     [
-        # Rooms 0 - 7
+        # Rooms 16 - 23
         {'description': 'Side of House', 'objects': set(), 'exits': 'ns'},
         {'description': 'Back of Hallway', 'objects': set(), 'exits': 'ns'},
         {'description': 'Dark Alcove', 'objects': {OBJ_COINS,}, 'exits': 'se'},
@@ -128,7 +203,7 @@ GAME_MAP = [
     ],
     # row 3
     [
-        # Rooms 0 - 7
+        # Rooms 24 - 31
         {'description': 'Near Crumbling Wall', 'objects': set(), 'exits': 'n'},
         {'description': 'Gloomy Passage', 'objects': {OBJ_VACUUM,}, 'exits': 'ns'},
         {'description': 'Pool of Light', 'objects': {OBJ_BATTERIES,}, 'exits': 'nse'},
@@ -140,7 +215,7 @@ GAME_MAP = [
     ],
     # row 4
     [
-        # Rooms 0 - 7
+        # Rooms 32 - 39
         {'description': 'Cupboard with Hanging Coat', 'objects': set(), 'exits': 's'}, # there is a hidden key in the coat
         {'description': 'Front Hall', 'objects': set(), 'exits': 'nse'},
         {'description': 'Sitting Room', 'objects': set(), 'exits': 'nsw'},
@@ -152,7 +227,7 @@ GAME_MAP = [
     ],
     # row 5
     [
-        # Rooms 0 - 7
+        # Rooms 40 - 47
         {'description': 'Closet', 'objects': set(), 'exits': 'ne'},
         {'description': 'Front Lobby', 'objects': set(), 'exits': 'nw'},
         {'description': 'Library of Evil Books', 'objects': {OBJ_CANDLESTICK,}, 'exits': 'ne'},
@@ -164,7 +239,7 @@ GAME_MAP = [
     ],
     # row 6
     [
-        # Rooms 0 - 7
+        # Rooms 48 - 55
         {'description': 'Rubble Strewn Verandah', 'objects': set(), 'exits': 'se'},
         {'description': 'Front Porch', 'objects': set(), 'exits': 'nsw'},
         {'description': 'Front Tower', 'objects': {OBJ_GOBLET,}, 'exits': 'e'},
@@ -176,7 +251,7 @@ GAME_MAP = [
     ],
     # row 7
     [
-        # Rooms 0 - 7
+        # Rooms 56 - 63
         {'description': 'By Twisted Railing', 'objects': set(), 'exits': 'ne'},
         {'description': 'Path Through Iron Gate', 'objects': set(), 'exits': 'nwe'},
         {'description': 'By Railings', 'objects': set(), 'exits': 'we'},
@@ -188,83 +263,166 @@ GAME_MAP = [
     ]
 ]
 
-def is_in_room(room_coords, current_location):
-    return room_coords[0] == current_location[0] and room_coords[1] == current_location[1]
+# Define a utility method to clear the screen.
+# This uses "ANSI Escape Sequences" - special combinations of
+# characters that are understood by the terminal, but are difficult
+# (or impossible) to type on a keyboard. `\033[` is the
+# "escape sequence"; the characters after the escape sequnce are
+# interpreted as commands. In this case, we're using:
+#   2J - clear screen; and
+#   H - move the cursor to the Home position (top left corner)
+#
+# For more details about ANSI escape sequences, see:
+#     https://en.wikipedia.org/wiki/ANSI_escape_code
+#
+def clear_screen():
+    print('\033[2J\033[H', end='')
+    sys.stdout.flush()
+
+# Utility method to join a list of words using commas and an "and". For example:
+#        and_join(['banana','apple','pear']) ==> 'banana, apple and pear'
+def and_join(words):
+    return join(words, 'and')
 
 
-def get_room(room_coords):
+# Utility method to join a list of words using commas and an "or". For example:
+#    or_join(['banana','apple','pear']) ==> 'banana, apple or pear'
+def or_join(words):
+    return join(words, 'or')
+
+
+# Utility method to join a list of words using commas and a joining word. For example:
+#    _join(['banana','apple','pear', 'or']) ==> 'banana, apple or pear'
+def join(words, joiner):
+    if not words:
+        return ''
+    # strip leading and/or trailing spaces from words, and remove any empty strings from the list
     try:
-        row = room_coords[0]
-        col = room_coords[1]
+        words = [str(x) for x in words]
+        words = [x.strip() for x in words if len(x.strip()) > 0]
+        if not words:
+            return ''
+        return words[0] if len(words) == 1 else (' {} '.format(joiner)).join((', '.join(words[0:-1]), words[-1]))
+    except TypeError:
+        # words is not an iterable object
+        pass
+    return ''
+
+# Defines a utility method to check if the room coordinates match
+# the given location
+def is_in_room(room_coords, location):
+    return room_coords[0] == location[0] and room_coords[1] == location[1]
+
+
+# Defines a utility method to "get" the room definition for
+# the given map coordinates
+def get_room(map_coords):
+    try:
+        row = map_coords[0]
+        col = map_coords[1]
         return GAME_MAP[row][col]
     except IndexError:
         return None
 
 
+# Defines a utility method to get the room exits for
+# the given room definition
 def get_room_exits(room):
     return room.get('exits', '')
 
 
+# Defines a utility method to change the room exits for
+# the given room definition
 def update_room_exits(room, exits):
     room['exits'] = exits
 
 
+# Defines a utility method to get the room description for
+# the given room definition
 def get_room_description(room):
     return room.get('description', '')
 
 
+# Defines a utility method to change the room description for
+# the given room definition
 def update_room_description(room, description):
     room['description'] = description
 
 
+# Defines a utility method to get the contents for the
+# given room definition
 def get_room_contents(room):
     return room.get('objects', set())
 
 
+# Defines a utility method to check if the given room
+# definition currently contains the given object
 def room_contains(room, obj):
     return obj in get_room_contents(room)
 
 
+# Defines a utility method to add an object to the given
+# room's contents
 def add_object_to_room(room, obj):
     get_room_contents(room).add(obj)
 
 
+# Defines a utility method to remove an object from the given
+# room's contents
 def remove_object_from_room(room, obj):
     get_room_contents(room).remove(obj)
 
 
+# Defines a utility method to check if a given game flag is
+# currently active
 def is_active(flag):
     return game_flags.get(flag, False)
 
 
+# Defines a utility method to set a given game flag to
+# active or inactive
 def set_flag_state(flag, is_active):
     game_flags[flag] = True
 
 
+# Defines a utility method to activate a given game flag. Note
+# that this actually just calls set_flag_state(True), but makes
+# the code a bit easier to read
 def activate_flag(flag):
     set_flag_state(flag, True)
 
 
+# Defines a utility method to deactivate a given game flag. Note
+# that this actually just calls set_flag_state(False), but makes
+# the code a bit easier to read
 def deactivate_flag(flag):
     set_flag_state(flag, False)
 
 
+# Defines a utility method to check if the player is holding the
+# given object
 def is_holding(obj):
     return obj in inventory
 
 
+# Defines a utility method to 'drop' the given object into the room
 def drop_item(obj, room):
-    if obj in inventory:
+    # you can only drop something if you have it!
+    if is_holding(obj):
         inventory.remove(obj)
         add_object_to_room(room, obj)
 
 
+# Defines a utility method to 'take' the given object from the room
 def take_item(obj, room):
+    # you can only take if the room contains it!
     if room_contains(room, obj):
         remove_object_from_room(room, obj)
         inventory.add(obj)
 
 
+# Defines a utility method to update the given location by the given
+# displacement
 def move(current_location, displacement):
     new_row = current_location[0] + displacement[0]
     new_col = current_location[1] + displacement[1]
@@ -274,16 +432,19 @@ def move(current_location, displacement):
     current_location[1] = new_col
 
 
+# The handler function for the verb 'help'
 def verb_help(verb, current_location, obj=None):
-    return 'Words I know: ' + ', '.join(VERB_HANDLERS.keys())
+    return 'Words I know: ' + or_join(VERB_HANDLERS.keys())
 
 
+# The handler function for the verb 'carrying?'
 def verb_carrying(verb, current_location, obj=None):
     if not inventory:
         return 'You are carrying nothing.'
-    return 'You are carrying: '+ ', '.join([item for item in inventory])
+    return 'You are carrying: '+ and_join(inventory)
 
 
+# The handler function for the verbs 'go', 'n', 's', 'w', w', 'u' and 'd'
 def verb_go(verb, current_location, obj=None):
     room = get_room(current_location)
     room_exits = get_room_exits(room)
@@ -365,7 +526,7 @@ def verb_go(verb, current_location, obj=None):
                 message = 'The door slams shut!'
     return message
 
-
+# The handler function for the verb 'get'
 def verb_get(verb, current_location, obj=None):
     message = 'I don\'t know what ' + obj + ' is.'
     if is_holding(obj):
@@ -379,7 +540,7 @@ def verb_get(verb, current_location, obj=None):
             message = 'You have the ' + obj
     return message
 
-
+# The handler function for the verb 'open'
 def verb_open(verb, current_location, obj=None):
     if is_in_room((5, 3), current_location) and obj in (OBJ_DRAWER, OBJ_DESK):
         # Room 43 - Study with Desk & Hole in Wall
@@ -395,6 +556,7 @@ def verb_open(verb, current_location, obj=None):
         message = 'You can\'t {} that'.format(verb)
     return message
 
+# The handler function for the verb 'examine'
 def verb_examine(verb, current_location, obj=None):
     if obj == OBJ_COFFIN:
         # delegate to VERB_OPEN handler
@@ -425,6 +587,7 @@ def verb_examine(verb, current_location, obj=None):
         message = 'I don\'t know how to {} that...'.format(verb)
     return message
 
+# The handler function for the verb 'read'
 def verb_read(verb, current_location, obj=None):
     if is_in_room((5, 2), current_location) and obj == OBJ_BOOKS:
         # Room 42 - Library of Evil Books
@@ -440,6 +603,7 @@ def verb_read(verb, current_location, obj=None):
         message = 'I don\'t know how to {} that...'.format(verb)
     return message
 
+# The handler function for the verb 'say'
 def verb_say(verb, current_location, obj=None):
     if not obj:
         message = 'Say... what, exactly?'
@@ -456,6 +620,7 @@ def verb_say(verb, current_location, obj=None):
                 current_location[1] = random.randint(0,GAME_MAP_COLS - 1)
     return message
 
+# The handler function for the verb 'dig'
 def verb_dig(verb, current_location, obj=None):
     if is_holding(OBJ_SHOVEL):
         message = 'You made a hole'
@@ -467,6 +632,7 @@ def verb_dig(verb, current_location, obj=None):
         message = 'You seriously expect me to to {} with my bare hands...?!?'.format(verb)
     return message
 
+# The handler function for the verb 'swing'
 def verb_swing(verb, current_location, obj=None):
     if not is_holding(OBJ_ROPE) and is_in_room((0,7), current_location):
         message = 'This is no time to play games'
@@ -487,6 +653,7 @@ def verb_swing(verb, current_location, obj=None):
         message = 'I\'m not sure what swinging that would achieve...'
     return message
 
+# The handler function for the verb 'climb'
 def verb_climb(verb, current_location, obj=None):
     if obj == OBJ_ROPE:
         if is_holding(OBJ_ROPE):
@@ -504,6 +671,7 @@ def verb_climb(verb, current_location, obj=None):
         message = 'I\'m not sure what climbing that would achieve...'
     return message
 
+# The handler function for the verb 'light'
 def verb_light(verb, current_location, obj=None):
     if obj == OBJ_CANDLE:
         if not is_holding(OBJ_CANDLE):        
@@ -523,6 +691,7 @@ def verb_light(verb, current_location, obj=None):
         message = 'I\'m not sure what setting that on fire that would achieve...'
     return message
 
+# The handler function for the verb 'unlight'
 def verb_unlight(verb, current_location, obj=None):
     if is_active(FLAG_LIT_CANDLE):
         message = 'Extinguished.'
@@ -532,6 +701,7 @@ def verb_unlight(verb, current_location, obj=None):
         message = 'I can\'t extinguish that...'
     return message
 
+# The handler function for the verb 'spray'
 def verb_spray(verb, current_location, obj=None):
     if obj in (OBJ_BATS, OBJ_AEROSOL) and is_holding(OBJ_AEROSOL):
         if is_active(OBJ_BATS):
@@ -545,6 +715,7 @@ def verb_spray(verb, current_location, obj=None):
         message = 'I can\'t {} that...'.format(verb)
     return message
 
+# The handler function for the verb 'use'
 def verb_use(verb, current_location, obj=None):
     if obj == OBJ_VACUUM and is_holding(OBJ_VACUUM) and is_holding(OBJ_BATTERIES):
         message = 'Switched on.'
@@ -558,6 +729,7 @@ def verb_use(verb, current_location, obj=None):
         message = 'I\'m not sure how to {} that...'.format(verb)
     return message
 
+# The handler function for the verb 'unlock'
 def verb_unlock(verb, current_location, obj=None):
     if is_in_room((5, 3), current_location) and obj in (OBJ_DRAWER, OBJ_DESK):
         # Room 43 - Study with Desk & Hole in Wall - delegate to VERB_OPEN handler
@@ -575,6 +747,7 @@ def verb_unlock(verb, current_location, obj=None):
         message = 'I\'m not sure how I could {} that...'.format(verb)
     return message
 
+# The handler function for the verb 'leave'
 def verb_leave(verb, current_location, obj=None):
     if obj is None:
         message = 'What should I {}?'.format(verb)
@@ -586,6 +759,7 @@ def verb_leave(verb, current_location, obj=None):
         message = 'Done.'
     return message
 
+# The handler function for the verb 'score'
 def verb_score(verb, current_location, obj=None):
     score = len(inventory)
     if score == 17 and not is_holding(OBJ_BOAT):
@@ -597,7 +771,8 @@ def verb_score(verb, current_location, obj=None):
             message = 'You have everything - return to the gate for your final score.'
     return message
 
-
+# The following is a dictionary object which allows us to 'look up' the
+# appropriate handler function for the verbs that the play might use.
 VERB_HANDLERS = {
     VERB_HELP: verb_help,
     VERB_CARRYING: verb_carrying,
@@ -637,16 +812,17 @@ OBJECTS = [
     OBJ_COFFIN, OBJ_BOOKS, OBJ_XZANFAR, OBJ_WALLS, OBJ_SPELLS,
 ]
 
+# initialize the game flags
 game_flags = dict(zip(OBJECTS, [False,] * len(OBJECTS)))
 for x in [OBJ_RING, OBJ_CANDLE, UP, OBJ_BATS, OBJ_DRAWER]:
     activate_flag(x)
 
+# initialize the game nouns
 adventure_nouns = set()
 for row in GAME_MAP:
     for room in row:
         room_contents = get_room_contents(room)
         adventure_nouns.update(room_contents)
-
 adventure_nouns.update(
     [
         NORTH, SOUTH, EAST, WEST, UP, DOWN,
@@ -656,10 +832,15 @@ adventure_nouns.update(
     ]
 )
 
+# initialise the inventory (empty to start with)
 inventory = set()
 
+# initialise the candlelight counter (so we can make the candle "run out"
+# when it is lit)
 candlelight_counter = 0
-current_location = [7, 1] # Room #57 - Path Through Iron Gate
+
+# the starting location for the player is Room #57 - Path Through Iron Gate
+current_location = [7, 1]
 
 # Now we can start the actual game.
 clear_screen()
@@ -671,10 +852,10 @@ while True:
     room = get_room(current_location)
     print(get_room_description(room))
     print('Exits:')
-    print(', '.join(x.upper() for x in get_room_exits(room)))
+    print(or_join([x for x in get_room_exits(room)]))
     room_objects = get_room_contents(room)
     if room_objects:
-        print('You can see ' + ', '.join(room_objects) + ' here')
+        print('You can see ' + and_join(room_objects) + ' here')
     print('='*20)
     print(message)
     message = 'What?'
@@ -703,7 +884,7 @@ while True:
         activate_flag(OBJ_BATS)
         message = 'BATS ATTACKING!!'
         print(message)
-    elif is_in_room((5, 4), current_location) and not is_active(DOWN) and random.randint(1,2) is 1:
+    elif is_in_room((5, 4), current_location) and not is_active(DOWN) and random.randint(1, 2) is 1:
         activate_flag(OBJ_GHOSTS)
 
     if is_active(FLAG_LIT_CANDLE):

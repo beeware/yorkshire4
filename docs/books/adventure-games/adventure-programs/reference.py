@@ -78,7 +78,9 @@ GETTABLE_OBJECTS = [
     # Room#:  10       25      26         4       2    7     47    60       43      32
     10, 25, 26, 4, 2, 7, 47, 60, 43, 32
 ]
-# don't forget this is all 1 indexed in the BASIC version
+# don't forget this is all 1 indexed in the BASIC version with respect to the objects, 
+# because index 0 is used as a "special" flag, so the object 'painting' corresponds to
+# flag index 1, the object 'ring' corresponds to flag index 2 and so on.
 FLAGS = [False,] * len(OBJECTS)
 FLAGS[2] = True # ring
 FLAGS[17] = True # candle
@@ -92,6 +94,6 @@ MESSAGE = 'OK'
 
 # utility to convert old room indexes to the "modern map" for checking
 def old_coord_convert(old_index):
-    row = int(old_index/MAP_ROWS)
-    col = old_index - (row * MAP_ROWS)
-    return MODERN_MAP[row][col], row, col
+    row = int(old_index / 8)
+    col = old_index - (row * 8)
+    return 'Room', old_index, 'is at coordinates', row, col
