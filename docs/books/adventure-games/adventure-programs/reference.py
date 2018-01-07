@@ -5,14 +5,14 @@ VERBS = [
 ]
 # the descriptions of each of the rooms (8x8 grid)
 LOCATIONS = [
-    # 0             1                   2                     3 
+    # 0             1                   2                     3
     'Dark Corner', 'Overgrown Garden', 'By Large Woodpile', 'Yard by Rubbish',
-    # 4           5         6               7 
+    # 4           5         6               7
     'Weedpatch', 'Forest', 'Thick Forest', 'Blasted Tree',
 
-    # 8                 9                      10                        11 
+    # 8                 9                      10                        11
     'Corner of House', 'Entrance to Kitchen', 'Kutchen & Grimy Cooker', 'Scullery Door',
-    # 12                         13                  14                   15 
+    # 12                         13                  14                   15
     'Room with Inches of Dust', 'Rear Turret Room', 'Clearing by House', 'Path',
 
     # 16              17                  18            19
@@ -31,7 +31,7 @@ LOCATIONS = [
     'Steep Marble Stairs', 'Dining Room', 'Deep Cellar with Coffin', 'Cliff Path',
 
     # 40       41             42                        43
-    'Closet', 'Front Lobby', 'Library of Evil Books', 'Study with Desk & Hole in Wall', 
+    'Closet', 'Front Lobby', 'Library of Evil Books', 'Study with Desk & Hole in Wall',
     # 44                    45                   46             47
     'Weird Cobwebby Room', 'Very Cold Chamber', 'Spooky Room', 'Cliff Path by Marsh',
 
@@ -78,19 +78,20 @@ GETTABLE_OBJECTS = [
     # Room#:  10       25      26         4       2    7     47    60       43      32
     10, 25, 26, 4, 2, 7, 47, 60, 43, 32
 ]
-# don't forget this is all 1 indexed in the BASIC version with respect to the objects, 
+# don't forget this is all 1 indexed in the BASIC version with respect to the objects,
 # because index 0 is used as a "special" flag, so the object 'painting' corresponds to
 # flag index 1, the object 'ring' corresponds to flag index 2 and so on.
-FLAGS = [False,] * len(OBJECTS)
-FLAGS[2] = True # ring
-FLAGS[17] = True # candle
-FLAGS[18] = True # key
-FLAGS[23] = True # up
-FLAGS[26] = True # bats
-FLAGS[28] = True # drawer
+FLAGS = [False, ] * len(OBJECTS)
+FLAGS[2] = True  # ring
+FLAGS[17] = True  # candle
+FLAGS[18] = True  # key
+FLAGS[23] = True  # up
+FLAGS[26] = True  # bats
+FLAGS[28] = True  # drawer
 
 ROOM = 57
 MESSAGE = 'OK'
+
 
 # utility to convert old room indexes to the "modern map" for checking
 def old_coord_convert(old_index):

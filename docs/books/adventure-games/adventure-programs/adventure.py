@@ -5,12 +5,12 @@
 import random
 import sys
 
-# Here we define a number of 'constants' - these are variables which store values 
+# Here we define a number of 'constants' - these are variables which store values
 # that are used throughout the game, and which don't change. This means we can use
 # the variable name, rather than typing in the value each time. This has a couple
 # of advantages:
 #  * one is that if we typed in everything manually, there is a chance we could
-#    mis-type it, and break the code - for example, if we mis-typed the word 
+#    mis-type it, and break the code - for example, if we mis-typed the word
 #    'xzanfar' somewhere, it's likely that the playecould never finish the game
 #  * another is that if there is a spelling mistake, or we want to change a word,
 #    we only need to change it in one place, and it takes effect everywhere. For
@@ -154,15 +154,15 @@ GAME_MAP_COLS = GAME_MAP_ROWS
 #     >
 #
 #
-# Note that some exits are up or down (rooms 20, 22 and 36), but these are 
-# translated into north, south, east or west directions by the game if the 
+# Note that some exits are up or down (rooms 20, 22 and 36), but these are
+# translated into north, south, east or west directions by the game if the
 # player uses  one of those exits so that it makes sense on the map.
 #
 # This array defines all the rooms in the map, including the objects they contain
 # and what exits are available. Note that while this is defined as a 'constant'
-# it will actually be modified occasionally during the game as the player picks 
-# up and  leaves objects, or events occur which may change the description of 
-# the room, or even what exits are available (if the player unlocks a door, 
+# it will actually be modified occasionally during the game as the player picks
+# up and  leaves objects, or events occur which may change the description of
+# the room, or even what exits are available (if the player unlocks a door,
 # for example)
 GAME_MAP = [
     # row 0
@@ -170,22 +170,22 @@ GAME_MAP = [
         # Rooms 0 - 7
         {'description': 'Dark Corner', 'objects': set(), 'exits': 'se'},
         {'description': 'Overgrown Garden', 'objects': set(), 'exits': 'we'},
-        {'description': 'By Large Woodpile', 'objects': {OBJ_AXE,}, 'exits': 'we'},
+        {'description': 'By Large Woodpile', 'objects': {OBJ_AXE, }, 'exits': 'we'},
         {'description': 'Yard by Rubbish', 'objects': set(), 'exits': 'swe'},
-        {'description': 'Weedpatch', 'objects': {OBJ_SHOVEL,}, 'exits': 'we'},
-        {'description': 'Forest', 'objects': set(), 'exits,}': 'we'},
+        {'description': 'Weedpatch', 'objects': {OBJ_SHOVEL, }, 'exits': 'we'},
+        {'description': 'Forest', 'objects': set(), 'exits': 'we'},
         {'description': 'Thick Forest', 'objects': set(), 'exits': 'swe'},
-        {'description': 'Blasted Tree', 'objects': {OBJ_ROPE,}, 'exits': 'ws'},
+        {'description': 'Blasted Tree', 'objects': {OBJ_ROPE, }, 'exits': 'ws'},
     ],
     # row 1
     [
         # Rooms 8 - 15
         {'description': 'Corner of House', 'objects': set(), 'exits': 'ns'},
         {'description': 'Entrance to Kitchen', 'objects': set(), 'exits': 'se'},
-        {'description': 'Kutchen & Grimy Cooker', 'objects': {OBJ_MATCHES,}, 'exits': 'we'},
+        {'description': 'Kutchen & Grimy Cooker', 'objects': {OBJ_MATCHES, }, 'exits': 'we'},
         {'description': 'Scullery Door', 'objects': set(), 'exits': 'nw'},
         {'description': 'Room with Inches of Dust', 'objects': set(), 'exits': 'se'},
-        {'description': 'Rear Turret Room', 'objects': {OBJ_SCROLL,}, 'exits': 'w'},
+        {'description': 'Rear Turret Room', 'objects': {OBJ_SCROLL, }, 'exits': 'w'},
         {'description': 'Clearing by House', 'objects': set(), 'exits': 'ne'},
         {'description': 'Path', 'objects': set(), 'exits': 'nsw'},
     ],
@@ -194,7 +194,7 @@ GAME_MAP = [
         # Rooms 16 - 23
         {'description': 'Side of House', 'objects': set(), 'exits': 'ns'},
         {'description': 'Back of Hallway', 'objects': set(), 'exits': 'ns'},
-        {'description': 'Dark Alcove', 'objects': {OBJ_COINS,}, 'exits': 'se'},
+        {'description': 'Dark Alcove', 'objects': {OBJ_COINS, }, 'exits': 'se'},
         {'description': 'Small Dark Room', 'objects': set(), 'exits': 'we'},
         {'description': 'Bottom of Spiral Staircase', 'objects': set(), 'exits': 'nwud'},
         {'description': 'Wide Passage', 'objects': set(), 'exits': 'sw'},
@@ -205,10 +205,10 @@ GAME_MAP = [
     [
         # Rooms 24 - 31
         {'description': 'Near Crumbling Wall', 'objects': set(), 'exits': 'n'},
-        {'description': 'Gloomy Passage', 'objects': {OBJ_VACUUM,}, 'exits': 'ns'},
-        {'description': 'Pool of Light', 'objects': {OBJ_BATTERIES,}, 'exits': 'nse'},
+        {'description': 'Gloomy Passage', 'objects': {OBJ_VACUUM, }, 'exits': 'ns'},
+        {'description': 'Pool of Light', 'objects': {OBJ_BATTERIES, }, 'exits': 'nse'},
         {'description': 'Impressive Vaulted Hallway', 'objects': set(), 'exits': 'we'},
-        {'description': 'Hall By Thick Wooden Door', 'objects': {OBJ_STATUE,}, 'exits': 'we'},
+        {'description': 'Hall By Thick Wooden Door', 'objects': {OBJ_STATUE, }, 'exits': 'we'},
         {'description': 'Trophy Room', 'objects': set(), 'exits': 'nsw'},
         {'description': 'Cellar with Barred Window', 'objects': set(), 'exits': 'ns'},
         {'description': 'Cliff Path', 'objects': set(), 'exits': 'ns'},
@@ -216,13 +216,13 @@ GAME_MAP = [
     # row 4
     [
         # Rooms 32 - 39
-        {'description': 'Cupboard with Hanging Coat', 'objects': set(), 'exits': 's'}, # there is a hidden key in the coat
+        {'description': 'Cupboard with Hanging Coat', 'objects': set(), 'exits': 's'},  # there is a hidden key in the coat
         {'description': 'Front Hall', 'objects': set(), 'exits': 'nse'},
         {'description': 'Sitting Room', 'objects': set(), 'exits': 'nsw'},
-        {'description': 'Secret Room', 'objects': {OBJ_MAGICSPELLS,}, 'exits': 's'},
+        {'description': 'Secret Room', 'objects': {OBJ_MAGICSPELLS, }, 'exits': 's'},
         {'description': 'Steep Marble Stairs', 'objects': set(), 'exits': 'nsud'},
         {'description': 'Dining Room', 'objects': set(), 'exits': 'n'},
-        {'description': 'Deep Cellar with Coffin', 'objects': {OBJ_RING,}, 'exits': 'n'},
+        {'description': 'Deep Cellar with Coffin', 'objects': {OBJ_RING, }, 'exits': 'n'},
         {'description': 'Cliff Path', 'objects': set(), 'exits': 'ns'},
     ],
     # row 5
@@ -230,19 +230,19 @@ GAME_MAP = [
         # Rooms 40 - 47
         {'description': 'Closet', 'objects': set(), 'exits': 'ne'},
         {'description': 'Front Lobby', 'objects': set(), 'exits': 'nw'},
-        {'description': 'Library of Evil Books', 'objects': {OBJ_CANDLESTICK,}, 'exits': 'ne'},
-        {'description': 'Study with Desk & Hole in Wall', 'objects': {OBJ_CANDLE,}, 'exits': 'w'},
+        {'description': 'Library of Evil Books', 'objects': {OBJ_CANDLESTICK, }, 'exits': 'ne'},
+        {'description': 'Study with Desk & Hole in Wall', 'objects': {OBJ_CANDLE, }, 'exits': 'w'},
         {'description': 'Weird Cobwebby Room', 'objects': set(), 'exits': 'nse'},
         {'description': 'Very Cold Chamber', 'objects': set(), 'exits': 'we'},
-        {'description': 'Spooky Room', 'objects': {OBJ_PAINTING,}, 'exits': 'w'},
-        {'description': 'Cliff Path by Marsh', 'objects': {OBJ_BOAT,}, 'exits': 'ns'},
+        {'description': 'Spooky Room', 'objects': {OBJ_PAINTING, }, 'exits': 'w'},
+        {'description': 'Cliff Path by Marsh', 'objects': {OBJ_BOAT, }, 'exits': 'ns'},
     ],
     # row 6
     [
         # Rooms 48 - 55
         {'description': 'Rubble Strewn Verandah', 'objects': set(), 'exits': 'se'},
         {'description': 'Front Porch', 'objects': set(), 'exits': 'nsw'},
-        {'description': 'Front Tower', 'objects': {OBJ_GOBLET,}, 'exits': 'e'},
+        {'description': 'Front Tower', 'objects': {OBJ_GOBLET, }, 'exits': 'e'},
         {'description': 'Sloping Corridor', 'objects': set(), 'exits': 'we'},
         {'description': 'Upper Gallery', 'objects': set(), 'exits': 'nw'},
         {'description': 'Marsh by Wall', 'objects': set(), 'exits': 's'},
@@ -256,12 +256,13 @@ GAME_MAP = [
         {'description': 'Path Through Iron Gate', 'objects': set(), 'exits': 'nwe'},
         {'description': 'By Railings', 'objects': set(), 'exits': 'we'},
         {'description': 'Beneath Front Tower', 'objects': set(), 'exits': 'we'},
-        {'description': 'Debris from Crumbling Facade', 'objects': {OBJ_AEROSOL,}, 'exits': 'we'},
+        {'description': 'Debris from Crumbling Facade', 'objects': {OBJ_AEROSOL, }, 'exits': 'we'},
         {'description': 'Large Fallen Brickwork', 'objects': set(), 'exits': 'nwe'},
         {'description': 'Rotting Stone Arch', 'objects': set(), 'exits': 'nwe'},
         {'description': 'Crumbling Clifftop', 'objects': set(), 'exits': 'w'},
     ]
 ]
+
 
 # Define a utility method to clear the screen.
 # This uses "ANSI Escape Sequences" - special combinations of
@@ -278,6 +279,7 @@ GAME_MAP = [
 def clear_screen():
     print('\033[2J\033[H', end='')
     sys.stdout.flush()
+
 
 # Utility method to join a list of words using commas and an "and". For example:
 #        and_join(['banana','apple','pear']) ==> 'banana, apple and pear'
@@ -307,6 +309,7 @@ def join(words, joiner):
         # words is not an iterable object
         pass
     return ''
+
 
 # Defines a utility method to check if the room coordinates match
 # the given location
@@ -441,7 +444,7 @@ def verb_help(verb, current_location, obj=None):
 def verb_carrying(verb, current_location, obj=None):
     if not inventory:
         return 'You are carrying nothing.'
-    return 'You are carrying: '+ and_join(inventory)
+    return 'You are carrying: ' + and_join(inventory)
 
 
 # The handler function for the verbs 'go', 'n', 's', 'w', w', 'u' and 'd'
@@ -510,10 +513,10 @@ def verb_go(verb, current_location, obj=None):
             message = 'Too dark to move'
         else:
             displacement_lookup = {
-                'n':(-1, 0),
-                's':(1, 0),
-                'w':(0, -1),
-                'e':(0, 1),
+                'n': (-1, 0),
+                's': (1, 0),
+                'w': (0, -1),
+                'e': (0, 1),
             }
             displacement = displacement_lookup.get(direction, 0)
             move(current_location, displacement)
@@ -521,10 +524,11 @@ def verb_go(verb, current_location, obj=None):
             if is_in_room((5, 1), current_location) and is_active(UP):
                 # room 41 - front lobby and door is open
                 room = get_room(current_location)
-                update_room_exits(room, 'nw') # south exit (front door) is no longer available
-                deactivate_flag(UP) # flag that the door is shut
+                update_room_exits(room, 'nw')  # south exit (front door) is no longer available
+                deactivate_flag(UP)  # flag that the door is shut
                 message = 'The door slams shut!'
     return message
+
 
 # The handler function for the verb 'get'
 def verb_get(verb, current_location, obj=None):
@@ -539,6 +543,7 @@ def verb_get(verb, current_location, obj=None):
             take_item(obj, room)
             message = 'You have the ' + obj
     return message
+
 
 # The handler function for the verb 'open'
 def verb_open(verb, current_location, obj=None):
@@ -555,6 +560,7 @@ def verb_open(verb, current_location, obj=None):
     else:
         message = 'You can\'t {} that'.format(verb)
     return message
+
 
 # The handler function for the verb 'examine'
 def verb_examine(verb, current_location, obj=None):
@@ -587,6 +593,7 @@ def verb_examine(verb, current_location, obj=None):
         message = 'I don\'t know how to {} that...'.format(verb)
     return message
 
+
 # The handler function for the verb 'read'
 def verb_read(verb, current_location, obj=None):
     if is_in_room((5, 2), current_location) and obj == OBJ_BOOKS:
@@ -603,11 +610,12 @@ def verb_read(verb, current_location, obj=None):
         message = 'I don\'t know how to {} that...'.format(verb)
     return message
 
+
 # The handler function for the verb 'say'
 def verb_say(verb, current_location, obj=None):
     if not obj:
         message = 'Say... what, exactly?'
-    else:    
+    else:
         message = 'OK: "{}"!'.format(obj)
         if obj == OBJ_XZANFAR and is_holding(OBJ_MAGICSPELLS):
             message = '* Magic Occurs *'
@@ -616,9 +624,10 @@ def verb_say(verb, current_location, obj=None):
                 activate_flag(OBJ_XZANFAR)
             else:
                 # otherwise the OBJ_XZANFAR spell moves the player to a random room
-                current_location[0] = random.randint(0,GAME_MAP_ROWS - 1)
-                current_location[1] = random.randint(0,GAME_MAP_COLS - 1)
+                current_location[0] = random.randint(0, GAME_MAP_ROWS - 1)
+                current_location[1] = random.randint(0, GAME_MAP_COLS - 1)
     return message
+
 
 # The handler function for the verb 'dig'
 def verb_dig(verb, current_location, obj=None):
@@ -627,14 +636,15 @@ def verb_dig(verb, current_location, obj=None):
         if is_in_room((3, 4), current_location):
             # if we are in room 45 - Cellar with Barred Window
             room = get_room(current_location)
-            update_room_exits(room, 'nse') # east exit becomes available
+            update_room_exits(room, 'nse')  # east exit becomes available
     else:
         message = 'You seriously expect me to to {} with my bare hands...?!?'.format(verb)
     return message
 
+
 # The handler function for the verb 'swing'
 def verb_swing(verb, current_location, obj=None):
-    if not is_holding(OBJ_ROPE) and is_in_room((0,7), current_location):
+    if not is_holding(OBJ_ROPE) and is_in_room((0, 7), current_location):
         message = 'This is no time to play games'
         message = 'You don\'t have ' + obj
     elif obj == OBJ_ROPE and is_holding(OBJ_ROPE):
@@ -644,7 +654,7 @@ def verb_swing(verb, current_location, obj=None):
         if is_in_room((0, 7), current_location):
             # Room 43 - Study with Desk & Hole in Wall
             room = get_room(current_location)
-            update_room_exits(room, 'wn') # north exit becomes available
+            update_room_exits(room, 'wn')  # north exit becomes available
             update_room_description(room, 'Study with a Secret Room')
             message = 'You broke through a thin wall.'
     elif obj is None:
@@ -652,6 +662,7 @@ def verb_swing(verb, current_location, obj=None):
     else:
         message = 'I\'m not sure what swinging that would achieve...'
     return message
+
 
 # The handler function for the verb 'climb'
 def verb_climb(verb, current_location, obj=None):
@@ -671,10 +682,11 @@ def verb_climb(verb, current_location, obj=None):
         message = 'I\'m not sure what climbing that would achieve...'
     return message
 
+
 # The handler function for the verb 'light'
 def verb_light(verb, current_location, obj=None):
     if obj == OBJ_CANDLE:
-        if not is_holding(OBJ_CANDLE):        
+        if not is_holding(OBJ_CANDLE):
             message = 'You don\'t have a ' + obj
         else:
             if not is_holding(OBJ_CANDLESTICK):
@@ -691,6 +703,7 @@ def verb_light(verb, current_location, obj=None):
         message = 'I\'m not sure what setting that on fire that would achieve...'
     return message
 
+
 # The handler function for the verb 'unlight'
 def verb_unlight(verb, current_location, obj=None):
     if is_active(FLAG_LIT_CANDLE):
@@ -700,6 +713,7 @@ def verb_unlight(verb, current_location, obj=None):
     else:
         message = 'I can\'t extinguish that...'
     return message
+
 
 # The handler function for the verb 'spray'
 def verb_spray(verb, current_location, obj=None):
@@ -715,6 +729,7 @@ def verb_spray(verb, current_location, obj=None):
         message = 'I can\'t {} that...'.format(verb)
     return message
 
+
 # The handler function for the verb 'use'
 def verb_use(verb, current_location, obj=None):
     if obj == OBJ_VACUUM and is_holding(OBJ_VACUUM) and is_holding(OBJ_BATTERIES):
@@ -729,6 +744,7 @@ def verb_use(verb, current_location, obj=None):
         message = 'I\'m not sure how to {} that...'.format(verb)
     return message
 
+
 # The handler function for the verb 'unlock'
 def verb_unlock(verb, current_location, obj=None):
     if is_in_room((5, 3), current_location) and obj in (OBJ_DRAWER, OBJ_DESK):
@@ -738,7 +754,7 @@ def verb_unlock(verb, current_location, obj=None):
         # Room 28 - Hall By Thick Wooden Door
         activate_flag(OBJ_DOOR)
         room = get_room(current_location)
-        update_room_exits('sew') # south exit becomes available
+        update_room_exits('sew')  # south exit becomes available
         update_room_description(room, 'Huge Open Door')
         message = 'The key turns...!'
     elif obj is None:
@@ -746,6 +762,7 @@ def verb_unlock(verb, current_location, obj=None):
     else:
         message = 'I\'m not sure how I could {} that...'.format(verb)
     return message
+
 
 # The handler function for the verb 'leave'
 def verb_leave(verb, current_location, obj=None):
@@ -759,6 +776,7 @@ def verb_leave(verb, current_location, obj=None):
         message = 'Done.'
     return message
 
+
 # The handler function for the verb 'score'
 def verb_score(verb, current_location, obj=None):
     score = len(inventory)
@@ -770,6 +788,7 @@ def verb_score(verb, current_location, obj=None):
         else:
             message = 'You have everything - return to the gate for your final score.'
     return message
+
 
 # The following is a dictionary object which allows us to 'look up' the
 # appropriate handler function for the verbs that the play might use.
@@ -788,7 +807,7 @@ VERB_HANDLERS = {
     VERB_OPEN: verb_open,
     VERB_EXAMINE: verb_examine,
     VERB_READ: verb_read,
-    VERB_SAY:verb_say,
+    VERB_SAY: verb_say,
     VERB_DIG: verb_dig,
     VERB_SWING: verb_swing,
     VERB_CLIMB: verb_climb,
@@ -796,7 +815,7 @@ VERB_HANDLERS = {
     VERB_UNLIGHT: verb_unlight,
     VERB_SPRAY: verb_spray,
     VERB_USE: verb_use,
-    VERB_UNLOCK:verb_unlock,
+    VERB_UNLOCK: verb_unlock,
     VERB_LEAVE: verb_leave,
     VERB_SCORE: verb_score,
 }
@@ -813,7 +832,7 @@ OBJECTS = [
 ]
 
 # initialize the game flags
-game_flags = dict(zip(OBJECTS, [False,] * len(OBJECTS)))
+game_flags = dict(zip(OBJECTS, [False, ] * len(OBJECTS)))
 for x in [OBJ_RING, OBJ_CANDLE, UP, OBJ_BATS, OBJ_DRAWER]:
     activate_flag(x)
 
@@ -856,7 +875,7 @@ while True:
     room_objects = get_room_contents(room)
     if room_objects:
         print('You can see ' + and_join(room_objects) + ' here')
-    print('='*20)
+    print('=' * 20)
     print(message)
     message = 'What?'
     user_input = input('What will you do now? ')
