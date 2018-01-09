@@ -408,23 +408,20 @@ class OldSchoolScreen:
                 cursor_min_x, cursor_min_y = min(cursor_min_x, cx), min(cursor_min_y, cy)
                 cursor_max_x, cursor_max_y = max(cursor_max_x, cx), max(cursor_max_y, cy)
 
-                # need to translate the codes of some characters to map
-                # to the internal character schema, unfortunately
-                if 32 <= o <= 63:
-                    # the following characters are all fine - use as is
-                    # [space] ! " # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < > ?
-                    pass
-                elif 96 <= o <= 122:
-                    # lowercase a-z
-                    o = 257 + (o - 97)
-                elif 64 <= o <= 94:
-                    # uppercase A-Z, as well as...
-                    # @ [ ] ^
-                    o -= 64
+                # Commodore 64 note - we need to translate the ASCII codes of some characters
+                # to map to the 'PETSCII' character schema, unfortunately - refer to:
+                #     http://sta.c64.org/cbm64pet.html
+                # TODO need to be able to define a 'character mapping' function for screen
+                # profiles to handle this sort of thing generically
+                if 96 <= o <= 122:
+                     # lowercase a-z
+                     o = 256 + (o - 32)
+
+                # constrain character to font range
+                o = o % len(self.font)
 
                 if inverse:
-                    # add 128 to make it inverse colored
-                    o += 128
+                     fg_color, bg_color = bg_color, fg_color
 
                 self.put_character(o, cx, cy, fg_color=fg_color, bg_color=bg_color)
 
@@ -486,7 +483,7 @@ class OldSchoolScreen:
 
         NOTE: does not render the updated screen! This must be done manually
         """
-        # scroll up character memory, insert blank line
+        # scroll up character memory, insert blank line (fill with space characters)
         self.screen_char_memory = self.screen_char_memory[self.char_cols:]
         self.screen_char_memory.extend([32, ] * self.char_cols)
         # scroll up color memory, copy last row values onto end
@@ -621,6 +618,11 @@ class OldSchoolScreen:
         This method carries out the hard work of actually rendering a character onto the screen. It
         uses the bytes defined in the font array to render the bitmap for each character
 
+        TODO - There **has** to be a better way of doing this than actually plotting rectangles;
+               surely there is a way to use the actual bytes directly onto a TK graphics object of
+               some kind, scale/color the result and the blat it to the main canvas at the correct
+               location...?
+
         :param char_code: the character code to render
         :param col: the column coordinate at which to render the character
         :param row: the row coordinate at which to render the character
@@ -652,13 +654,13 @@ class OldSchoolScreen:
                 self.rect(top_x, y1, top_x + self.char_width, y2, fg_color)
             elif value > 0:
                 # some bits are on - render
-                # we could just render every 'pixel' individually, but this tries to minimise
-                # draw calls by drawing rectangles for horizontally adjacent pixels which are
-                # active
+                # we could just render every 'pixel' individually (which would massively simplify
+                # the following code), but this tries to minimise draw calls by drawing rectangles
+                # for horizontally adjacent pixels which are active
                 first_on_idx = None
                 bit_is_set = None
                 bit_idx = 0
-                for bit_idx, bit_value in enumerate([1, 2, 4, 8, 16, 32, 64, 128]):
+                for bit_idx, bit_value in enumerate([128, 64, 32, 16, 8, 4, 2, 1]):
                     bit_is_set = value & bit_value
                     if bit_is_set:
                         # this bit is on
