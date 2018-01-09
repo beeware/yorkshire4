@@ -6,9 +6,10 @@ class OldSchoolScreen:
     """
     Emulates a screen from the olden days
     """
-    def __init__(self, full_screen_size, screen_size, character_size, colors, font, scale=2):
+    def __init__(self, tk, full_screen_size, screen_size, character_size, colors, font, scale=2):
         """
         Initialise the screen
+        :param tk the TKinter instance, as constructed with tkinter.Tk()
         :param full_screen_size: the resolution of the 'full' screen, to the edges of the CRT,
                including any border, as (WIDTH, HEIGHT) in pixels
         :param screen_size:  the resolution of the 'addressable' screen (i.e., the area of the
@@ -19,6 +20,7 @@ class OldSchoolScreen:
         :param scale: the scale - modern displays are usually too large to make the original
                'native' display size useful, so this allows it to be scaled up
         """
+        self.tk = tk
         self.screen_width, self.screen_height = full_screen_size[0], full_screen_size[1]
         self.main_width, self.main_height = screen_size[0], screen_size[1]
         self.char_width, self.char_height = character_size[0], character_size[1]
@@ -48,8 +50,7 @@ class OldSchoolScreen:
         self.cursor_position = [0, 0]
 
         # initialise the TK canvas
-        master = Tk()
-        self.screen = Canvas(master,
+        self.screen = Canvas(tk,
                              width=self.screen_width * self.scale,
                              height=self.screen_height * self.scale)
         self.screen.pack()
@@ -59,6 +60,12 @@ class OldSchoolScreen:
         self.set_screen_color(bg_color)
         # clear the screen
         self.clear_screen()
+
+    def bind_event_handler(self, sequence=None, func=None, add=None):
+        self.screen.bind_all(sequence, func, add)
+
+    def unbind_event_handler(self, sequence, funcid=None):
+        self.screen.unbind(sequence, funcid)
 
     def get_screen_size(self):
         """
@@ -333,8 +340,11 @@ class OldSchoolScreen:
             if scrolled:
                 cursor_min_y = max(0, cursor_min_y - 1)
         if render and (char_codes or newline):
-            # just render the area of the screen which was modified
-            self.render_area(cursor_min_x, cursor_min_y, cursor_max_x, cursor_max_y)
+            if scrolled:
+                self.render()
+            else:
+                # just render the area of the screen which was modified
+                self.render_area(cursor_min_x, cursor_min_y, cursor_max_x, cursor_max_y)
 
     def scroll_up(self):
         """
