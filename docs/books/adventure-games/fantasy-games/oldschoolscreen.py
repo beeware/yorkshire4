@@ -396,22 +396,17 @@ class OldSchoolScreen:
         :param render: if True (default) update the screen immediately, otherwise only prepare
                the screen without rendering (may be rendered later)
         """
-        cx, cy = self.get_cursor_pos()
-        cursor_min_x, cursor_min_y = cx, cy
-        cursor_max_x, cursor_max_y = cx, cy
+        char_codes = []
         if text:
             text = str(text)  # just in case they pass in a numeric rather than a string
             for c in text:
                 o = ord(c)
 
-                cx, cy = self.get_cursor_pos()
-                cursor_min_x, cursor_min_y = min(cursor_min_x, cx), min(cursor_min_y, cy)
-                cursor_max_x, cursor_max_y = max(cursor_max_x, cx), max(cursor_max_y, cy)
-
                 # Commodore 64 note - we need to translate the ASCII codes of some characters
                 # to map to the 'PETSCII' character schema, unfortunately - refer to:
                 #     http://sta.c64.org/cbm64pet.html
-                # TODO need to be able to define a 'character mapping' function for screen
+                # TODO this is Commodore64 specific - probably need to be able to define a
+                # 'character mapping' function for print() to use
                 # profiles to handle this sort of thing generically
                 if 96 <= o <= 122:
                      # lowercase a-z
@@ -419,28 +414,20 @@ class OldSchoolScreen:
 
                 # constrain character to font range
                 o = o % len(self.font)
+                char_codes.append(o)
 
-                if inverse:
-                     fg_color, bg_color = bg_color, fg_color
+        if inverse:
+             fg_color, bg_color = bg_color, fg_color
 
-                self.put_character(o, cx, cy, fg_color=fg_color, bg_color=bg_color)
-
-                scrolled = self.move_cursor_right()
-                if scrolled:
-                    cursor_min_y = max(0, cursor_min_y - 1)
-        if newline:
-            scrolled = self.do_newline()
-            if scrolled:
-                cursor_min_y = max(0, cursor_min_y - 1)
-        if render and (text or newline):
-            # just render the area of the screen which was modified
-            self.render_area(cursor_min_x, cursor_min_y, cursor_max_x, cursor_max_y)
+        # delegate to printing raw character codes at this point
+        self.print_charcodes(char_codes, fg_color, bg_color, newline, render)
 
     def print_charcodes(self, char_codes=None,
                         fg_color=None, bg_color=None,
                         newline=True, render=True):
         """
-        Print text on the screen, starting at the current cursor location
+        Print text on the screen using 'raw' character codes, starting at the current cursor
+        location
         :param char_codes: the character codes to print as a list
         :param fg_color: optionally define the foreground color to use - if unspecified the
                existing color memory at the location of the printing of each character will be used.
@@ -452,8 +439,6 @@ class OldSchoolScreen:
         :param render: if True (default) update the screen immediately, otherwise only prepare
                the screen without rendering (may be rendered later)
         """
-        if char_codes is None:
-            char_codes = []
         cx, cy = self.get_cursor_pos()
         cursor_min_x, cursor_min_y = cx, cy
         cursor_max_x, cursor_max_y = cx, cy
