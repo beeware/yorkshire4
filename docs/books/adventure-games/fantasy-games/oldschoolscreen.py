@@ -218,40 +218,6 @@ class OldSchoolScreen:
         """
         return self.main_x0 + (x * self.scale), self.main_y0 + (y * self.scale)
 
-    def plot(self, x, y, color):
-        """
-        Draw a single 'pixel' on the screen (with respect to the resolution of the 'old school
-        screen' and scaling
-        :param x: the x coordinate
-        :param y: the y coordinate
-        :param color: the color to plot
-        """
-        color = self.get_color(color)
-        x1, y1 = self.coord_convert(x, y)
-        x2, y2 = self.coord_convert(x+1, y+1)
-        self.screen.create_rectangle(
-            x1, y1, x2 - 1, y2 - 1,
-            fill=color, outline=color
-        )
-
-    def rect(self, x1, y1, x2, y2, color):
-        """
-        Draw a (filled) rectangle on the screen (with respect to the resolution of the 'old school
-        screen' and scaling
-        :param x1: the top left x coordinate
-        :param y1: the top left y coordinate
-        :param x2: the bottom right x coordinate
-        :param y2: the bottom right y coordinate
-        :param color: the color to draw the rectangle
-        """
-        color = self.get_color(color)
-        x1, y1 = self.coord_convert(x1, y1)
-        x2, y2 = self.coord_convert(x2, y2)
-        self.screen.create_rectangle(
-            x1, y1, x2 - 1, y2 - 1,
-            fill=color, outline=color
-        )
-
     def get_char_memory_offset(self, col, row):
         """
         A utility method to obtain the offset from the start of screen memory of a given character
@@ -288,96 +254,6 @@ class OldSchoolScreen:
             self.font[start_charcode + charcode] = character_def
         return old_character_defs
 
-    def render(self, force_all=False):
-        """
-        Renders the whole screen. This is optimised to attempt to render only areas of the screen
-        which have changed since the last render occurred, skipping anything else.
-        :param force_all: optionally force the rendering of *everything* on the screen, skipping
-               the optimisations to avoid re-rendering anything which has not changed.
-        """
-        screen_mem_offset = 0
-        for row in range(0, self.char_rows):
-            for col in range(0, self.char_cols):
-                current_char = self.screen_char_memory[screen_mem_offset]
-                current_fg_color, current_bg_color = self.screen_color_memory[screen_mem_offset]
-                if force_all:
-                    has_changed = True
-                elif self.last_rendered_screen_char_memory is None or \
-                     self.last_rendered_screen_color_memory is None:
-                    has_changed = True
-                else:
-                    last_char = self.last_rendered_screen_char_memory[screen_mem_offset]
-                    last_fg_color, last_bg_color = self.last_rendered_screen_color_memory[screen_mem_offset]
-                    has_changed = last_char != current_char or \
-                                  last_fg_color != current_fg_color or \
-                                  last_bg_color != current_bg_color
-                if has_changed:
-                    self.draw_character(current_char, col, row, current_fg_color, current_bg_color)
-                screen_mem_offset += 1
-
-        self.last_rendered_screen_char_memory = self.screen_char_memory.copy()
-        self.last_rendered_screen_color_memory = copy.deepcopy(self.screen_color_memory)
-
-    def render_area(self, col0, row0, col1, row1, force_all=False):
-        """
-        Renders a portion of the screen. This is optimised to attempt to render only the parts of
-        the area which have changed since the last render occurred, skipping anything else.
-        :param col0: the top left column of the area to render
-        :param row0: the top left row of the area to render
-        :param col1: the bottom right column of the area to render
-        :param row1: the bottom right row of the area to render
-        :param force_all: optionally force the rendering of *everything* in the area, skipping
-               the optimisations to avoid re-rendering anything which has not changed.
-        """
-        col0, row0 = self.constrain_char_coords(col0, row0)
-        col1, row1 = self.constrain_char_coords(col1, row1)
-        col0, col1 = min(col0, col1), max(col0, col1)
-        row0, row1 = min(row0, row1), max(row0, row1)
-        if col0 == 0 and row0 == 0 and col1 >= self.char_cols - 1 and row1 >= self.char_rows - 1:
-            # full screen re-render
-            self.render(force_all=force_all)
-        else:
-            for col in range(col0, col1 + 1):
-                for row in range(row0, row1 + 1):
-                    self.render_char(col, row)
-
-    def render_char(self, col, row, force=False):
-        """
-        Render the col/row location as it is currently defined in screen memory. This is optimised
-        to render only if the screen and/or color memory at the location has changed since the last
-        render occurred, skipping otherwise.
-        :param col: the column to render
-        :param row: the row to render
-        :param force: optionally force the rendering of the character, skipping
-               the optimisations to avoid re-rendering it if it has not changed.
-        """
-        screen_mem_offset = self.get_char_memory_offset(col, row)
-        current_char = self.screen_char_memory[screen_mem_offset]
-        current_fg_color, current_bg_color = self.screen_color_memory[screen_mem_offset]
-        if force:
-            has_changed = True
-        elif self.last_rendered_screen_char_memory is None or \
-             self.last_rendered_screen_color_memory is None:
-            has_changed = True
-        else:
-            last_char = self.last_rendered_screen_char_memory[screen_mem_offset]
-            last_fg_color, last_bg_color = self.last_rendered_screen_color_memory[screen_mem_offset]
-            has_changed = last_char != current_char or \
-                          last_fg_color != current_fg_color or \
-                          last_bg_color != current_bg_color
-        if has_changed:
-            self.draw_character(current_char, col, row, current_fg_color, current_bg_color)
-
-            if self.last_rendered_screen_char_memory is None:
-                self.last_rendered_screen_char_memory = self.screen_char_memory.copy()
-            else:
-                self.last_rendered_screen_char_memory[screen_mem_offset] = self.screen_char_memory[screen_mem_offset]
-
-            if self.last_rendered_screen_color_memory is None:
-                self.last_rendered_screen_color_memory = copy.deepcopy(self.screen_color_memory)
-            else:
-                self.last_rendered_screen_color_memory[screen_mem_offset] = copy.deepcopy(self.screen_color_memory[screen_mem_offset])
-
     def print(self, text=None,
               fg_color=None, bg_color=None,
               newline=True, inverse=False, render=True):
@@ -398,23 +274,22 @@ class OldSchoolScreen:
         """
         char_codes = []
         if text:
-            text = str(text)  # just in case they pass in a numeric rather than a string
-            for c in text:
-                o = ord(c)
+            # just in case they pass in a numeric rather than a string, force string conversion now
+            text = str(text)
+            # get the character codes for each letter in the string (
+            char_codes = [ord(c) for c in text]
 
+            for idx, c in enumerate(char_codes):
                 # Commodore 64 note - we need to translate the ASCII codes of some characters
                 # to map to the 'PETSCII' character schema, unfortunately - refer to:
                 #     http://sta.c64.org/cbm64pet.html
                 # TODO this is Commodore64 specific - probably need to be able to define a
-                # 'character mapping' function for print() to use
-                # profiles to handle this sort of thing generically
-                if 96 <= o <= 122:
+                # TODO 'character mapping' function for print() to use profiles to handle this
+                # TODO sort of thing generically, or alternatively have an inheriting class
+                # TODO implement the specifics of the C64 printing by overriding print(...)
+                if 96 <= c <= 122:
                      # lowercase a-z
-                     o = 256 + (o - 32)
-
-                # constrain character to font range
-                o = o % len(self.font)
-                char_codes.append(o)
+                     char_codes[idx] = (256 + (c - 32)) % len(self.font)
 
         if inverse:
              fg_color, bg_color = bg_color, fg_color
@@ -598,6 +473,40 @@ class OldSchoolScreen:
             if bg_color is not None:
                 screen_color[1] = bg_color
 
+    def plot(self, x, y, color):
+        """
+        Draw a single 'pixel' on the screen (with respect to the resolution of the 'old school
+        screen' and scaling
+        :param x: the x coordinate
+        :param y: the y coordinate
+        :param color: the color to plot
+        """
+        color = self.get_color(color)
+        x1, y1 = self.coord_convert(x, y)
+        x2, y2 = self.coord_convert(x+1, y+1)
+        self.screen.create_rectangle(
+            x1, y1, x2 - 1, y2 - 1,
+            fill=color, outline=color
+        )
+
+    def rect(self, x1, y1, x2, y2, color):
+        """
+        Draw a (filled) rectangle on the screen (with respect to the resolution of the 'old school
+        screen' and scaling
+        :param x1: the top left x coordinate
+        :param y1: the top left y coordinate
+        :param x2: the bottom right x coordinate
+        :param y2: the bottom right y coordinate
+        :param color: the color to draw the rectangle
+        """
+        color = self.get_color(color)
+        x1, y1 = self.coord_convert(x1, y1)
+        x2, y2 = self.coord_convert(x2, y2)
+        self.screen.create_rectangle(
+            x1, y1, x2 - 1, y2 - 1,
+            fill=color, outline=color
+        )
+
     def draw_character(self, char_code, col, row, fg_color=None, bg_color=None):
         """
         This method carries out the hard work of actually rendering a character onto the screen. It
@@ -668,3 +577,93 @@ class OldSchoolScreen:
                               fg_color)
         # update screen memory
         self.put_character(char_code, col, row, fg_color, bg_color)
+
+    def render(self, force_all=False):
+        """
+        Renders the whole screen. This is optimised to attempt to render only areas of the screen
+        which have changed since the last render occurred, skipping anything else.
+        :param force_all: optionally force the rendering of *everything* on the screen, skipping
+               the optimisations to avoid re-rendering anything which has not changed.
+        """
+        screen_mem_offset = 0
+        for row in range(0, self.char_rows):
+            for col in range(0, self.char_cols):
+                current_char = self.screen_char_memory[screen_mem_offset]
+                current_fg_color, current_bg_color = self.screen_color_memory[screen_mem_offset]
+                if force_all:
+                    has_changed = True
+                elif self.last_rendered_screen_char_memory is None or \
+                     self.last_rendered_screen_color_memory is None:
+                    has_changed = True
+                else:
+                    last_char = self.last_rendered_screen_char_memory[screen_mem_offset]
+                    last_fg_color, last_bg_color = self.last_rendered_screen_color_memory[screen_mem_offset]
+                    has_changed = last_char != current_char or \
+                                  last_fg_color != current_fg_color or \
+                                  last_bg_color != current_bg_color
+                if has_changed:
+                    self.draw_character(current_char, col, row, current_fg_color, current_bg_color)
+                screen_mem_offset += 1
+
+        self.last_rendered_screen_char_memory = self.screen_char_memory.copy()
+        self.last_rendered_screen_color_memory = copy.deepcopy(self.screen_color_memory)
+
+    def render_area(self, col0, row0, col1, row1, force_all=False):
+        """
+        Renders a portion of the screen. This is optimised to attempt to render only the parts of
+        the area which have changed since the last render occurred, skipping anything else.
+        :param col0: the top left column of the area to render
+        :param row0: the top left row of the area to render
+        :param col1: the bottom right column of the area to render
+        :param row1: the bottom right row of the area to render
+        :param force_all: optionally force the rendering of *everything* in the area, skipping
+               the optimisations to avoid re-rendering anything which has not changed.
+        """
+        col0, row0 = self.constrain_char_coords(col0, row0)
+        col1, row1 = self.constrain_char_coords(col1, row1)
+        col0, col1 = min(col0, col1), max(col0, col1)
+        row0, row1 = min(row0, row1), max(row0, row1)
+        if col0 == 0 and row0 == 0 and col1 >= self.char_cols - 1 and row1 >= self.char_rows - 1:
+            # full screen re-render
+            self.render(force_all=force_all)
+        else:
+            for col in range(col0, col1 + 1):
+                for row in range(row0, row1 + 1):
+                    self.render_char(col, row)
+
+    def render_char(self, col, row, force=False):
+        """
+        Render the col/row location as it is currently defined in screen memory. This is optimised
+        to render only if the screen and/or color memory at the location has changed since the last
+        render occurred, skipping otherwise.
+        :param col: the column to render
+        :param row: the row to render
+        :param force: optionally force the rendering of the character, skipping
+               the optimisations to avoid re-rendering it if it has not changed.
+        """
+        screen_mem_offset = self.get_char_memory_offset(col, row)
+        current_char = self.screen_char_memory[screen_mem_offset]
+        current_fg_color, current_bg_color = self.screen_color_memory[screen_mem_offset]
+        if force:
+            has_changed = True
+        elif self.last_rendered_screen_char_memory is None or \
+             self.last_rendered_screen_color_memory is None:
+            has_changed = True
+        else:
+            last_char = self.last_rendered_screen_char_memory[screen_mem_offset]
+            last_fg_color, last_bg_color = self.last_rendered_screen_color_memory[screen_mem_offset]
+            has_changed = last_char != current_char or \
+                          last_fg_color != current_fg_color or \
+                          last_bg_color != current_bg_color
+        if has_changed:
+            self.draw_character(current_char, col, row, current_fg_color, current_bg_color)
+
+            if self.last_rendered_screen_char_memory is None:
+                self.last_rendered_screen_char_memory = self.screen_char_memory.copy()
+            else:
+                self.last_rendered_screen_char_memory[screen_mem_offset] = self.screen_char_memory[screen_mem_offset]
+
+            if self.last_rendered_screen_color_memory is None:
+                self.last_rendered_screen_color_memory = copy.deepcopy(self.screen_color_memory)
+            else:
+                self.last_rendered_screen_color_memory[screen_mem_offset] = copy.deepcopy(self.screen_color_memory[screen_mem_offset])
