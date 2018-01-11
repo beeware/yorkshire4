@@ -18,3 +18,8 @@ with open(filename, "rb") as f:
             bit_reversed_bytes.append(bit_reversed_byte)
         print('{},'.format(str([x for x in bit_reversed_bytes])))
         char_bytes = f.read(8)
+
+
+
+for chunk in range(0,len(bytes),16):
+    print(str([x for x in bytes[chunk:chunk+16]])+',')

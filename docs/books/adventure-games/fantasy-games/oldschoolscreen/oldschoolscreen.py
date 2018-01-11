@@ -6,7 +6,11 @@ class OldSchoolScreen:
     """
     Emulates a screen from the olden days
     """
-    def __init__(self, tk, full_screen_size, screen_size, character_size, colors, font, scale=2):
+    def __init__(self, tk, full_screen_size, screen_size, character_size,
+                 colors, default_border_color, default_screen_color, default_text_color,
+                 font,
+                 text_to_character_mapper=None,
+                 scale=2):
         """
         Initialise the screen
         :param tk the TKinter instance, as constructed with tkinter.Tk()
@@ -16,15 +20,32 @@ class OldSchoolScreen:
                screen which the user can actually display things on), as (WIDTH, HEIGHT) in pixels
         :param character_size: the size of characters on the display, as (WIDTH, HEIGHT) in pixels
         :param colors: the colors for the display as a list of hex RGB values in the form '#RRGGBB'
+        :param default_border_color: the color to use for the border area when the screen starts
+        :param default_screen_color: the color to use for the screen area when the screen starts
+        :param default_text_color:  the color to use for the text when the screen starts
         :param font: the bytes which define the bitmap font for the display
-        :param scale: the scale - modern displays are usually too large to make the original
-               'native' display size useful, so this allows it to be scaled up
+        :param text_to_character_mapper: some old school machines had some oddities in how they
+               mapped text to character codes (i.e., they did not use a straight ASCII conversion).
+               If necessary, a function which takes a string and the font as arguments should be
+               provided here. The function must return a list of character codes which correspond
+               to the characters in the text on the old school screen being emulated. As a rather
+               silly example:
+
+                   def my_mapper(text, font):
+                        font_char_count = len(font)
+                        char_codes = [((255 - ord(char)) % font_char_count) for char in text]
+                        return char_codes
+
+        :param scale: the scaling factor (as an integer) - modern displays are usually too high a
+               resolution to make the original 'native' display size useful, so this allows it to
+               be scaled up
         """
         self.tk = tk
         self.screen_width, self.screen_height = full_screen_size[0], full_screen_size[1]
         self.main_width, self.main_height = screen_size[0], screen_size[1]
         self.char_width, self.char_height = character_size[0], character_size[1]
         self.colors = colors
+        self.text_to_character_mapper = text_to_character_mapper
         self.font = font
         self.scale = scale
 
@@ -36,12 +57,16 @@ class OldSchoolScreen:
         self.char_cols = int(self.main_width / self.char_width)
         self.char_rows = int(self.main_height / self.char_height)
 
-        # initialise the screen character memory
+        # initialise the screen character memory - fill with spaces (ASCII 32)
+        # to be *really* old school we should probably use bytes here rather than integers, but...
         self.screen_char_memory = [32, ] * (self.char_cols * self.char_rows)
         self.last_rendered_screen_char_memory = None
         # initialise the screen color memory
-        fg_color = 14  # blue
-        bg_color = 6  # light blue
+        # again, to be *really* old school we should probably use bytes here rather than
+        # integers, and even combine the two colors into a single byte using the first 4 bits for
+        # foreground and the last 4 bits for the background, but...
+        fg_color = default_text_color
+        bg_color = default_screen_color
         self.screen_color_memory = []
         for x in range(self.char_cols * self.char_rows):
             self.screen_color_memory.append([fg_color, bg_color])
@@ -56,16 +81,26 @@ class OldSchoolScreen:
         self.screen.pack()
 
         # set the border and screen colours
-        self.set_border_color(fg_color)
-        self.set_screen_color(bg_color)
+        self.set_border_color(default_border_color)
+        self.set_screen_color(default_screen_color)
         # clear the screen
         self.clear_screen()
 
     def bind_event_handler(self, sequence=None, func=None, add=None):
+        """
+        Bind an event handler to the screen (to handle key presses, for example). This is actually
+        just a wrapper around the Tkinter `bind_all(...)` function which is applied to the screen
+        canvas instance - please refer to Tkinter documentation for further details.
+        """
         self.screen.bind_all(sequence, func, add)
 
-    def unbind_event_handler(self, sequence, funcid=None):
-        self.screen.unbind(sequence, funcid)
+    def unbind_event_handler(self, sequence):
+        """
+        Unbind an event handler from the screen (to stop handling key presses, for example). This
+        is actually just a wrapper around the Tkinter `unbind_all(...)` function which is applied
+        to the screen canvas instance - please refer to Tkinter documentation for further details.
+        """
+        self.screen.unbind_all(sequence)
 
     def get_screen_size(self):
         """
@@ -283,20 +318,14 @@ class OldSchoolScreen:
         if text:
             # just in case they pass in a numeric rather than a string, force string conversion now
             text = str(text)
+        if self.text_to_character_mapper:
+            # a specific text to character code mapper has been provided - use that to convert
+            # the characters in the text to character codes
+            char_codes = self.text_to_character_mapper(text, self.font)
+        else:
             # get the character codes for each letter in the string (
-            char_codes = [ord(c) for c in text]
-
-            for idx, c in enumerate(char_codes):
-                # Commodore 64 note - we need to translate the ASCII codes of some characters
-                # to map to the 'PETSCII' character schema, unfortunately - refer to:
-                #     http://sta.c64.org/cbm64pet.html
-                # TODO this is Commodore64 specific - probably need to be able to define a
-                # TODO 'character mapping' function for print() to use profiles to handle this
-                # TODO sort of thing generically, or alternatively have an inheriting class
-                # TODO implement the specifics of the C64 printing by overriding print(...)
-                if 96 <= c <= 122:
-                     # lowercase a-z
-                     char_codes[idx] = (256 + (c - 32)) % len(self.font)
+            font_char_count = len(self.font)
+            char_codes = [(ord(c) % font_char_count) for c in text]
 
         if inverse:
              fg_color, bg_color = bg_color, fg_color
@@ -541,8 +570,8 @@ class OldSchoolScreen:
             bg_color = current_bg if bg_color is None else bg_color
 
         # work out top left coordinate for the character
-        top_x = col * self.char_height
-        top_y = row * self.char_width
+        top_x = col * self.char_width
+        top_y = row * self.char_height
 
         # clear the character square using the background color
         self.rect(top_x, top_y, top_x + self.char_width, top_y + self.char_height, bg_color)

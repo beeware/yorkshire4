@@ -1,12 +1,12 @@
 import tkinter
 
 from oldschoolscreen.oldschoolscreen import OldSchoolScreen
-from oldschoolscreen.screen_profiles.commodore64 import COMMODORE_64
+from oldschoolscreen.screen_profiles.microbee import MICROBEE
 
 
-class C64TypeWriter:
+class MicrobeeTypeWriter:
     def __init__(self, master):
-        self.screen = OldSchoolScreen(master, **COMMODORE_64, scale=3)
+        self.screen = OldSchoolScreen(master, **MICROBEE, scale=3)
         self.screen.bind_event_handler('<Key>', self.callback)
 
     def callback(self, event=None):
@@ -20,5 +20,5 @@ class C64TypeWriter:
                 self.screen.print(char, newline=False)
 
 root = tkinter.Tk()
-app = C64TypeWriter(root)
+app = MicrobeeTypeWriter(root)
 root.mainloop()

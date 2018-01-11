@@ -1,7 +1,9 @@
 from tkinter import *
 
-from oldschoolscreen import OldSchoolScreen
-from screen_profiles import COMMODORE_64
+from oldschoolscreen.oldschoolscreen import OldSchoolScreen
+from oldschoolscreen.screen_profiles.commodore64 import COMMODORE_64
+from oldschoolscreen.screen_profiles.zxspectrum import ZX_SPECTRUM
+from oldschoolscreen.screen_profiles.microbee import MICROBEE
 
 custom_characters = [
     [255, 255, 255, 255, 255, 255, 255, 255],
@@ -19,38 +21,39 @@ custom_characters = [
     [0, 8, 28, 42, 127, 85, 65, 34],
 ]
 
-c64_screen = OldSchoolScreen(**COMMODORE_64, scale=3)
+c64_screen = OldSchoolScreen(Tk(), **MICROBEE, scale=3)
 c64_screen.clear_screen()
-c64_screen.print('abcdefghijklmnopqrstuvwxyz')
-c64_screen.print('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-c64_screen.print('0123456789')
-c64_screen.print('!"#$%&\'()*+,-./')
-c64_screen.print(':;<>?')
-c64_screen.print('@^[]')
-c64_screen.print('The rain in spain stays mainly on the plain!')
-c64_screen.render()
-c64_screen.set_screen_color(2)
+# c64_screen.print('abcdefghijklmnopqrstuvwxyz')
+# c64_screen.print('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+# c64_screen.print('0123456789')
+# c64_screen.print('!"#$%&\'()*+,-./')
+# c64_screen.print(':;<>?')
+# c64_screen.print('@^[]')
+# c64_screen.print('The rain in spain stays mainly on the plain!')
+# c64_screen.render()
+# c64_screen.set_screen_color(2)
 
 # Character Test:
-c64_screen.print('Upper Case / Graphics')
-for x in range(0, 256, 32):
-   c64_screen.print_charcodes(range(x, x+32))
-c64_screen.print('-'*38)
-c64_screen.print('Lower Case / Upper Case')
-for x in range(256, 512, 32):
-   c64_screen.print_charcodes(range(x, x+32))
+# c64_screen.print('Upper Case / Graphics')
+step = 32
+for x in range(0, 256, step):
+   c64_screen.print_charcodes(range(x, x+step))
+# c64_screen.print('-'*38)
+# c64_screen.print('Lower Case / Upper Case')
+# for x in range(256, 512, 32):
+#    c64_screen.print_charcodes(range(x, x+32))
 
-c64_screen.set_screen_color(0)
-c64_screen.set_char_colors(0, 0, 1)
-c64_screen.render_char(0, 0)
-c64_screen.set_char_colors(0, 0, 2)
-c64_screen.set_char_colors(1, 0, 3)
-c64_screen.set_char_colors(0, 1, 5)
-c64_screen.set_char_colors(1, 1, 7)
-c64_screen.render_area(0, 0, 2, 2)
-c64_screen.define_custom_characters(65, custom_characters)
-c64_screen.print('ABC', render=False)
-c64_screen.put_character(64, 0, 0, bg_color=2)
-c64_screen.render(force_all=True)
+# c64_screen.set_screen_color(0)
+# c64_screen.set_char_colors(0, 0, 1)
+# c64_screen.render_char(0, 0)
+# c64_screen.set_char_colors(0, 0, 2)
+# c64_screen.set_char_colors(1, 0, 3)
+# c64_screen.set_char_colors(0, 1, 5)
+# c64_screen.set_char_colors(1, 1, 7)
+# c64_screen.render_area(0, 0, 2, 2)
+# c64_screen.define_custom_characters(65, custom_characters)
+# c64_screen.print('ABC', render=False)
+# c64_screen.put_character(64, 0, 0, bg_color=2)
+# c64_screen.render(force_all=True)
 
 mainloop()
