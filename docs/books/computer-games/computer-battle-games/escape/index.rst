@@ -1,11 +1,17 @@
-=======
-Escape!
-=======
+=============
+=============
 
 
 The code
 ========
 
-.. literalinclude:: escape.py
+.. literalinclude:: robot_missile.py
    :language: python
+
+Adding to the program
+---------------------
+
+
+Puzzle corner
+-------------
 
