@@ -1,0 +1,7 @@
+include beekeeper.yml
+include LICENSE
+recursive-include docs *.bat
+recursive-include docs *.jpg
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
