@@ -1,10 +1,10 @@
-=============
+=======
 Escape!
-=============
+=======
 
 The Robots have caught you, taken your weapons and locked you up. Suddenly you remember you still have your sonar wristwatch, which can be tuned to produre sounds of any frequency. If you can only find the resonant frequency of your Robot guards, they should vibrate so much they fall apart.
 
-You must be carefus not to use frequencies that are too low or the building will vibrate and collapse on top of you. If you go too high, you will get such a headache you will have to give up.
+You must be careful not to use frequencies that are too low or the building will vibrate and collapse on top of you. If you go too high, you will get such a headache you will have to give up.
 
 Can you escape the horrors of the Robot prison? (Look carefully at the program for a clue to the range of frequencies to try.)
 

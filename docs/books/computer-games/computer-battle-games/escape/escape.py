@@ -1,7 +1,15 @@
-import os, random
+# Import:
+# * random so we can generate random numbers,
+# * sys to manipulate the terminal
+import sys, random
 
-os.system('cls||clear')
-print('Escape!')
+# This utility method is used to clear the screen.
+# It uses an ANSI escape sequence that the computer understands but is difficult to type
+# on a keyboard.
+def clear_screen():
+    print('\033[2J\033[H', end='')
+    sys.stdout.flush()
+clear_screen()
 
 # This chooses a number between 1 and 100 for the frequency of the Robots.
 frequency = random.randint(1,100)
