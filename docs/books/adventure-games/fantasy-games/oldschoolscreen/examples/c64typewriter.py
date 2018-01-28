@@ -1,6 +1,6 @@
 import tkinter
 
-from oldschoolscreen.oldschoolscreen import OldSchoolScreen
+from oldschoolscreen.core import OldSchoolScreen
 from oldschoolscreen.screen_profiles.commodore64 import COMMODORE_64
 
 

@@ -592,17 +592,18 @@ C64_LOWERCASE_AND_UPPERCASE = [
 ]
 
 
-def c64_character_mapper(text, font):
-    font_char_count = len(font)
-    char_codes = []
-    for character in text:
-        char_code = ord(character)
+def c64_character_mapper(text):
+    char_codes = [ord(character) for character in text]
+    for idx, char_code in enumerate(char_codes):
         # Commodore 64 note - we need to translate the ASCII codes of some characters
         # to map to the 'PETSCII' character schema, unfortunately - refer to:
         #     http://sta.c64.org/cbm64pet.html
-        if 96 <= char_code <= 122:
+        if 97 <= char_code <= 122:
              # lowercase a-z
-             char_codes.append((256 + (char_code - 32)) % font_char_count)
+             char_codes[idx] -= 32
+        elif 65 <= char_code <= 90:
+             # uppercase A-Z
+             char_codes[idx] += 32
     return char_codes
 
 
@@ -617,29 +618,29 @@ COMMODORE_64 = {
     # Commodore 64 colors - see the very interesting article here:
     #    http://unusedino.de/ec64/technical/misc/vic656x/colors/
     'colors': [
-        '#000000',  # black
-        '#FFFFFF',  # white
-        '#68372B',  # red
-        '#70A4B2',  # cyan
-        '#6F3D86',  # purple
-        '#588D43',  # green
-        '#352879',  # blue
-        '#B8C76F',  # yellow
-        '#6F4F25',  # orange
-        '#433900',  # brown
-        '#9A6759',  # light red
-        '#444444',  # dark grey
-        '#6C6C6C',  # grey
-        '#9AD284',  # light green
-        '#6C5EB5',  # light blue
-        '#959595',  # light grey
+        '#000000',  # 0  black
+        '#FFFFFF',  # 1  white
+        '#68372B',  # 2  red
+        '#70A4B2',  # 3  cyan
+        '#6F3D86',  # 4  purple
+        '#588D43',  # 5  green
+        '#352879',  # 6  blue
+        '#B8C76F',  # 7  yellow
+        '#6F4F25',  # 8  orange
+        '#433900',  # 9  brown
+        '#9A6759',  # 10 light red
+        '#444444',  # 11 dark grey
+        '#6C6C6C',  # 12 grey
+        '#9AD284',  # 13 light green
+        '#6C5EB5',  # 14 light blue
+        '#959595',  # 15 light grey
     ],
     'default_border_color': 14,  # light blue
     'default_screen_color': 6,  # blue
     'default_text_color': 14,  # light blue
     # C64 kind of has 512 characters in its font due to the uppercase/graphics and
     # lowercase/uppercase 'modes' of printing
-    'font': C64_UPPERCASE_AND_GRAPHICS + C64_LOWERCASE_AND_UPPERCASE,
+    'font': C64_LOWERCASE_AND_UPPERCASE + C64_UPPERCASE_AND_GRAPHICS,
     # because of the nature of the C64's character map, we need to do some special
     # conversion when printing text
     'text_to_character_mapper': c64_character_mapper,

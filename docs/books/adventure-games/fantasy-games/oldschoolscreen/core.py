@@ -1,5 +1,6 @@
-from tkinter import *
 import copy
+
+from tkinter import *
 
 
 class OldSchoolScreen:
@@ -26,14 +27,13 @@ class OldSchoolScreen:
         :param font: the bytes which define the bitmap font for the display
         :param text_to_character_mapper: some old school machines had some oddities in how they
                mapped text to character codes (i.e., they did not use a straight ASCII conversion).
-               If necessary, a function which takes a string and the font as arguments should be
-               provided here. The function must return a list of character codes which correspond
-               to the characters in the text on the old school screen being emulated. As a rather
-               silly example:
+               If necessary, a function which takes a string as arguments should be provided here.
+               The function must return a list of character codes which correspond to the
+               characters in the text on the old school screen being emulated. As a rather silly
+               example:
 
-                   def my_mapper(text, font):
-                        font_char_count = len(font)
-                        char_codes = [((255 - ord(char)) % font_char_count) for char in text]
+                   def my_mapper(text):
+                        char_codes = [(255 - ord(char)) for char in text]
                         return char_codes
 
         :param scale: the scaling factor (as an integer) - modern displays are usually too high a
@@ -150,7 +150,7 @@ class OldSchoolScreen:
         :param row: the row coordinate to constrain
         :return: the constrained coordinates (guarantted to be within the screen boundaries)
         """
-        return max(0, min(self.char_cols -1, col)), max(0, min(self.char_rows -1, row))
+        return max(0, min(self.char_cols - 1, col)), max(0, min(self.char_rows - 1, row))
 
     def get_char(self, col, row):
         """
@@ -258,7 +258,7 @@ class OldSchoolScreen:
         :param y: the y coordinate
         :return: the converted coordinates
         """
-        return self.main_x0 + (x * self.scale), self.main_y0 + (y * self.scale)
+        return round(self.main_x0 + (x * self.scale)), round(self.main_y0 + (y * self.scale))
 
     def get_char_memory_offset(self, col, row):
         """
@@ -314,21 +314,23 @@ class OldSchoolScreen:
         :param render: if True (default) update the screen immediately, otherwise only prepare
                the screen without rendering (may be rendered later)
         """
-        char_codes = []
         if text:
             # just in case they pass in a numeric rather than a string, force string conversion now
             text = str(text)
+
         if self.text_to_character_mapper:
             # a specific text to character code mapper has been provided - use that to convert
-            # the characters in the text to character codes
-            char_codes = self.text_to_character_mapper(text, self.font)
+            # the characters in the text to character codes first
+            char_codes = self.text_to_character_mapper(text)
         else:
-            # get the character codes for each letter in the string (
+            # get the character codes for each letter in the string (normalising for the number
+            # of characters in the font so we don't get index out of bounds issues for fonts with
+            # weird numbers of characters in them
             font_char_count = len(self.font)
             char_codes = [(ord(c) % font_char_count) for c in text]
 
         if inverse:
-             fg_color, bg_color = bg_color, fg_color
+            fg_color, bg_color = bg_color, fg_color
 
         # delegate to printing raw character codes at this point
         self.print_charcodes(char_codes, fg_color, bg_color, newline, render)
@@ -353,6 +355,7 @@ class OldSchoolScreen:
         cx, cy = self.get_cursor_pos()
         cursor_min_x, cursor_min_y = cx, cy
         cursor_max_x, cursor_max_y = cx, cy
+        scrolled = False
         if char_codes:
             for char_code in char_codes:
                 cx, cy = self.get_cursor_pos()
@@ -520,13 +523,8 @@ class OldSchoolScreen:
         :param y: the y coordinate
         :param color: the color to plot
         """
-        color = self.get_color(color)
-        x1, y1 = self.coord_convert(x, y)
-        x2, y2 = self.coord_convert(x+1, y+1)
-        self.screen.create_rectangle(
-            x1, y1, x2 - 1, y2 - 1,
-            fill=color, outline=color
-        )
+        # delegates to the `rect(...)` method
+        self.rect(x, y, x+1, y+1, color)
 
     def rect(self, x1, y1, x2, y2, color):
         """
@@ -588,27 +586,53 @@ class OldSchoolScreen:
             elif value > 0:
                 # some bits are on - render
                 # we could just render every 'pixel' individually (which would massively simplify
-                # the following code), but this tries to minimise draw calls by drawing rectangles
-                # for horizontally adjacent pixels which are active
+                # the following code), but this tries to minimise draw calls by...
+                #
+                #  - drawing single rectangles for horizontally adjacent pixels which are active
+                #    (instead of one square per 'on' pixel), and
+                #  - only processes as far as the rightmost 'on' pixel, skipping processing of
+                #    'trailing' pixels which are off.
+                #
+                # For example:
+                #
+                #          Draw in this direction
+                #          |======>
+                # Byte     Bits
+                # 184  =   10111000
+                #          * ***
+                #          ^ ^  ^
+                #          | |  L these three pixels are skipped, because there are no more 'on'
+                #          | |    pixels to the right of them, so there is nothing else to draw for
+                #          | |    this byte.
+                #          | |
+                #          | L draw these three adjacent 'on' pixels as one single rectangle
+                #          |
+                #          L draw this pixel as a single rectangle - there are no adjacent 'on'
+                #            pixels, so we can't avoid this.
+                #
                 first_on_idx = None
                 bit_is_set = None
                 bit_idx = 0
                 for bit_idx, bit_value in enumerate([128, 64, 32, 16, 8, 4, 2, 1]):
-                    bit_is_set = value & bit_value
-                    if bit_is_set:
-                        # this bit is on
-                        if first_on_idx is None:
-                            # change of state to 'on' - record this index
-                            first_on_idx = bit_idx
-                    else:
-                        # this bit is off
-                        if first_on_idx is not None:
-                            # change of state to 'off' - draw the rectangle now
-                            self.rect(top_x + first_on_idx, y1,
-                                      top_x + bit_idx, y2,
-                                      fg_color)
-                            # we don't know where the next 'on' will be
-                            first_on_idx = None
+                    if value > 0 or bit_is_set:
+                        bit_is_set = value & bit_value
+                        if bit_is_set:
+                            # this bit is on
+                            if first_on_idx is None:
+                                # change of state to 'on' - record this index
+                                first_on_idx = bit_idx
+                            # by doing this we can stop drawing at the rightmost 'on' pixel,
+                            # skipping 'trailing' off pixels to the right of the last 'on' pixel
+                            value -= bit_value
+                        else:
+                            # this bit is off
+                            if first_on_idx is not None:
+                                # change of state to 'off' - draw the rectangle now
+                                self.rect(top_x + first_on_idx, y1,
+                                          top_x + bit_idx, y2,
+                                          fg_color)
+                                # we don't know where the next 'on' will be
+                                first_on_idx = None
                 # if we finished with an 'on' bit and a first on
                 if bit_is_set and first_on_idx:
                     self.rect(top_x + first_on_idx, y1,
@@ -631,7 +655,7 @@ class OldSchoolScreen:
                 current_fg_color, current_bg_color = self.screen_color_memory[screen_mem_offset]
                 if force_all:
                     has_changed = True
-                elif self.last_rendered_screen_char_memory is None or \
+                elif self.last_rendered_screen_char_memory is None or\
                      self.last_rendered_screen_color_memory is None:
                     has_changed = True
                 else:

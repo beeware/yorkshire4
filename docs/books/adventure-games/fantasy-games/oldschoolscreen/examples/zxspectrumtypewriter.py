@@ -1,12 +1,12 @@
 import tkinter
 
-from oldschoolscreen.oldschoolscreen import OldSchoolScreen
-from oldschoolscreen.screen_profiles.microbee import MICROBEE
+from oldschoolscreen.core import OldSchoolScreen
+from oldschoolscreen.screen_profiles.zxspectrum import ZX_SPECTRUM
 
 
-class MicrobeeTypeWriter:
+class ZXSpectrumTypeWriter:
     def __init__(self, master):
-        self.screen = OldSchoolScreen(master, **MICROBEE, scale=3)
+        self.screen = OldSchoolScreen(master, **ZX_SPECTRUM, scale=3)
         self.screen.bind_event_handler('<Key>', self.callback)
 
     def callback(self, event=None):
@@ -20,5 +20,5 @@ class MicrobeeTypeWriter:
                 self.screen.print(char, newline=False)
 
 root = tkinter.Tk()
-app = MicrobeeTypeWriter(root)
+app = ZXSpectrumTypeWriter(root)
 root.mainloop()
