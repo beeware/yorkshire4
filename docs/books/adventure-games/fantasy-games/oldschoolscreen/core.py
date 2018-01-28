@@ -190,6 +190,7 @@ class OldSchoolScreen:
                 screen_color[0] = fg_color
             if bg_color is not None:
                 screen_color[1] = bg_color
+        return self
 
     def set_border_color(self, color):
         """
@@ -221,6 +222,7 @@ class OldSchoolScreen:
             (self.screen_width * self.scale), self.main_y0 + (self.screen_height * self.scale),
             fill=color, outline=color
         )
+        return self
 
     def set_screen_color(self, color, render=True):
         """
@@ -234,6 +236,7 @@ class OldSchoolScreen:
             self.screen_color_memory[offset][1] = color
         if render:
             self.render()
+        return self
 
     def clear_screen(self, render=True, cursor_to_home=True):
         """
@@ -248,6 +251,7 @@ class OldSchoolScreen:
             self.move_cursor_to(0, 0)
         if render:
             self.render()
+        return self
 
     def coord_convert(self, x, y):
         """
@@ -333,7 +337,7 @@ class OldSchoolScreen:
             fg_color, bg_color = bg_color, fg_color
 
         # delegate to printing raw character codes at this point
-        self.print_charcodes(char_codes, fg_color, bg_color, newline, render)
+        return self.print_charcodes(char_codes, fg_color, bg_color, newline, render)
 
     def print_charcodes(self, char_codes=None,
                         fg_color=None, bg_color=None,
@@ -377,6 +381,7 @@ class OldSchoolScreen:
             else:
                 # just render the area of the screen which was modified
                 self.render_area(cursor_min_x, cursor_min_y, cursor_max_x, cursor_max_y)
+        return self
 
     def scroll_up(self):
         """
@@ -391,6 +396,7 @@ class OldSchoolScreen:
         # scroll up color memory, copy last row values onto end
         self.screen_color_memory = self.screen_color_memory[self.char_cols:]
         self.screen_color_memory.extend(copy.deepcopy(self.screen_color_memory[-self.char_cols:]))
+        return self
 
     def get_cursor_pos(self):
         """
@@ -408,23 +414,30 @@ class OldSchoolScreen:
         col, row = self.constrain_char_coords(col, row)
         self.cursor_position[0] = col
         self.cursor_position[1] = row
+        return self
 
     def move_cursor_up(self):
         """
-        Move the cursor 'up' from its current location
+        Move the cursor 'up' from its current location - if the cursor is in the top row this will
+        have no effect.
         """
         self.cursor_position[1] = max(0, self.cursor_position[1] - 1)
+        return self
 
     def move_cursor_left(self):
         """
-        Move the cursor 'left' from its current location
+        Move the cursor 'left' from its current location, unless it is in the HOME (0,0) position,
+        in which case there is nowhere to go. If the cursor is already in the left most column, it
+        will 'wrap' to the right hand side of the screen and move up a row.
         """
-        self.cursor_position[0] -= 1
-        if self.cursor_position[0] < 0:
-            self.cursor_position[0] = self.char_cols - 1
-            self.cursor_position[1] -= 1
-            if self.cursor_position[1] < 0:
-                self.cursor_position[1] = 0
+        if not (self.cursor_position[0] == 0 and self.cursor_position[1] == 0):
+            self.cursor_position[0] -= 1
+            if self.cursor_position[0] < 0:
+                self.cursor_position[0] = self.char_cols - 1
+                self.cursor_position[1] -= 1
+                if self.cursor_position[1] < 0:
+                    self.cursor_position[1] = 0
+        return self
 
     def move_cursor_down(self):
         """
@@ -444,8 +457,10 @@ class OldSchoolScreen:
 
     def move_cursor_right(self):
         """
-        Move the cursor 'right' from its current location. This may cause the screen to scroll up
-        if the cursor is already in the last character position on the bottom row.
+        Move the cursor 'right' from its current location. If the cursor is already in the right
+        most column, it will 'wrap' to the left hand side of the screen and move down a row. This
+        may cause the screen to scroll up if the cursor is in the right most column of the bottom
+        row (i.e., bottom right hand corner of the screen) when this method is called.
 
         :return: True if the screen scrolled up as a result of the cursor moving right, False
                  otherwise
@@ -487,10 +502,13 @@ class OldSchoolScreen:
         screen_mem_offset = self.get_char_memory_offset(col, row)
         self.screen_char_memory[screen_mem_offset] = char_code
         screen_color = self.screen_color_memory[screen_mem_offset]
+
         if fg_color is not None:
             screen_color[0] = fg_color
         if bg_color is not None:
             screen_color[1] = bg_color
+
+        return self
 
     def put_characters(self, char_codes, col, row, fg_color=None, bg_color=None):
         """
@@ -506,14 +524,18 @@ class OldSchoolScreen:
         :param bg_color: optionally specify the background color
         """
         screen_mem_offset = self.get_char_memory_offset(col, row)
+
         for idx, char_code in enumerate(char_codes):
             current_mem_offset = screen_mem_offset + idx
             self.screen_char_memory[current_mem_offset] = char_code
             screen_color = self.screen_color_memory[current_mem_offset]
+
             if fg_color is not None:
                 screen_color[0] = fg_color
             if bg_color is not None:
                 screen_color[1] = bg_color
+
+        return self
 
     def plot(self, x, y, color):
         """
@@ -524,7 +546,7 @@ class OldSchoolScreen:
         :param color: the color to plot
         """
         # delegates to the `rect(...)` method
-        self.rect(x, y, x+1, y+1, color)
+        return self.rect(x, y, x+1, y+1, color)
 
     def rect(self, x1, y1, x2, y2, color):
         """
@@ -543,6 +565,7 @@ class OldSchoolScreen:
             x1, y1, x2 - 1, y2 - 1,
             fill=color, outline=color
         )
+        return self
 
     def draw_character(self, char_code, col, row, fg_color=None, bg_color=None):
         """
@@ -641,6 +664,8 @@ class OldSchoolScreen:
         # update screen memory
         self.put_character(char_code, col, row, fg_color, bg_color)
 
+        return self
+
     def render(self, force_all=False):
         """
         Renders the whole screen. This is optimised to attempt to render only areas of the screen
@@ -671,6 +696,8 @@ class OldSchoolScreen:
         self.last_rendered_screen_char_memory = self.screen_char_memory.copy()
         self.last_rendered_screen_color_memory = copy.deepcopy(self.screen_color_memory)
 
+        return self
+
     def render_area(self, col0, row0, col1, row1, force_all=False):
         """
         Renders a portion of the screen. This is optimised to attempt to render only the parts of
@@ -693,6 +720,8 @@ class OldSchoolScreen:
             for col in range(col0, col1 + 1):
                 for row in range(row0, row1 + 1):
                     self.render_char(col, row)
+
+        return self
 
     def render_char(self, col, row, force=False):
         """
@@ -730,3 +759,5 @@ class OldSchoolScreen:
                 self.last_rendered_screen_color_memory = copy.deepcopy(self.screen_color_memory)
             else:
                 self.last_rendered_screen_color_memory[screen_mem_offset] = copy.deepcopy(self.screen_color_memory[screen_mem_offset])
+
+        return self

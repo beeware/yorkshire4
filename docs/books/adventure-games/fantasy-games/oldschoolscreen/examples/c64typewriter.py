@@ -12,11 +12,19 @@ class C64TypeWriter:
     def callback(self, event=None):
         char = event.char
         if char:
-            if char in '\r\n':
+            char_code = ord(char)
+            if char_code == 13:
+                # newline
                 scrolled = self.screen.do_newline()
                 if scrolled:
                     self.screen.render()
+            elif char_code == 8:
+                # backspace
+                self.screen.move_cursor_left()
+                x, y = self.screen.get_cursor_pos()
+                self.screen.put_character(32, x, y).render_char(x, y)
             else:
+                print(char, char_code)
                 self.screen.print(char, newline=False)
 
 root = tkinter.Tk()

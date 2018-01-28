@@ -28,7 +28,9 @@ custom_characters = [
     [0, 8, 28, 42, 127, 85, 65, 34],
 ]
 
-# Initialise the screen using a "profile" (COMMODORE_64, in this case)
+# Initialise the screen using a "profile"; COMMODORE_64, in this case . Try some of the other
+# example screen profiles provided, or make one of your own! The TRS-80 anyone...?
+#     http://www.kreativekorp.com/software/fonts/trs80.shtml
 crt_screen = OldSchoolScreen(Tk(), **COMMODORE_64, scale=3)
 
 # clear the screen
@@ -38,7 +40,7 @@ crt_screen.clear_screen()
 # Print some stuff to the screen so that we know it's working - this can be useful as some of the
 # older machines only had an upper case character set, and/or a limited set of non-alphanumerics
 # (i.e., punctuation etc) available. Note that the `print()` function will automatically cause the
-# screen to render the appropriate areas to update the screen.
+# screen to re-render the appropriate areas to update the screen.
 crt_screen.print('abcdefghijklmnopqrstuvwxyz')
 crt_screen.print('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 crt_screen.print('0123456789')
@@ -68,7 +70,8 @@ crt_screen.set_border_color(7)
 # update of the screen afterwards. This is because you probably want to do more than just update a
 # single color memory item, and so it would be a waste of resources to re-render the screen after
 # every single update (though on the actual Commodore 64 this would be an instantaneous change
-# because of the way the hardware worked).
+# because of the way the hardware worked). On the original machine, this would have been done by
+# directly setting a memory address with a POKE statement
 crt_screen.set_char_colors(0, 0, fg_color=1, bg_color=0)
 crt_screen.render()
 
