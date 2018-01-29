@@ -27,6 +27,13 @@ setup(
     license='New BSD',
     packages=find_packages(exclude=['tests']),
     install_requires=[],
+    entry_points={
+        'console_scripts': [
+            'c64 = yorkshire4.terminal:c64',
+            'microbee = yorkshire4.terminal:microbee',
+            'zxspectrum = yorkshire4.terminal:zxspectrum',
+        ]
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
