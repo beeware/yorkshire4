@@ -638,7 +638,7 @@ COMMODORE_64 = {
     'default_border_color': 14,  # light blue
     'default_screen_color': 6,  # blue
     'default_text_color': 14,  # light blue
-    # C64 kind of has 512 characters in its font due to the uppercase/graphics and
+    # C64 has an 'odd' character set / font due to the uppercase/graphics and
     # lowercase/uppercase 'modes' of printing
     'font': C64_LOWERCASE_AND_UPPERCASE + C64_UPPERCASE_AND_GRAPHICS,
     # because of the nature of the C64's character map, we need to do some special
