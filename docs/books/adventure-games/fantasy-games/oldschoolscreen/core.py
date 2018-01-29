@@ -300,7 +300,7 @@ class OldSchoolScreen:
             self.font[start_charcode + charcode] = character_def
         return old_character_defs
 
-    def print(self, text=None,
+    def print(self, text='',
               fg_color=None, bg_color=None,
               newline=True, inverse=False, render=True):
         """
@@ -573,9 +573,11 @@ class OldSchoolScreen:
         uses the bytes defined in the font array to render the bitmap for each character
 
         TODO - There **has** to be a better way of doing this than actually plotting rectangles;
-               surely there is a way to use the actual bytes directly onto a TK graphics object of
-               some kind, scale/color the result and the blat it to the main canvas at the correct
-               location...?
+               It should be possible to use the bytes directly onto a TK image instance scale/color
+               the result (without any anti-aliasing, of course!) and the blat it to the main
+               canvas at the correct location. It's probably debatable whether this would be more
+               or less 'educational' than the implementation below, but in any case I am currently
+               lacking in time to chase this up further.
 
         :param char_code: the character code to render
         :param col: the column coordinate at which to render the character
