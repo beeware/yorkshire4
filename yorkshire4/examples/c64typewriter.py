@@ -1,7 +1,7 @@
 import tkinter
 
-from oldschoolscreen.core import OldSchoolScreen
-from oldschoolscreen.screen_profiles.commodore64 import COMMODORE_64
+from yorkshire4.core import OldSchoolScreen
+from yorkshire4.profiles import COMMODORE_64
 
 # the ASCII code/character ordinal for the space character
 SPACE_CHAR = 32
@@ -113,7 +113,9 @@ class C64TypeWriter:
 
 # Kick everything off - start by initialising Tkinter...
 tkinter_root = tkinter.Tk()
+
 # set up the 'typewriter'
 C64TypeWriter(tkinter_root)
+
 # enter the Tkinter main loop
 tkinter_root.mainloop()
