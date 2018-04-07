@@ -335,7 +335,7 @@ default_text_color = 0  # black
 
 font = ZX_SPECTRUM_FONT
 
-# The character code to use for the cursor ('_')
+# The character code to use for the cursor (' ')
 cursor_char = 32
 
 # Cursor blink delay (in ms)
