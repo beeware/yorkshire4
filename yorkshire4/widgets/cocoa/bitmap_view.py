@@ -166,11 +166,20 @@ class BitmapView(Widget):
                 * (self.COMPONENTS_PER_PIXEL * self.interface.size[0])
             )
         )
-        if offset < self.memory_size:
-            self.memory[offset] = color.r
-            self.memory[offset + 1] = color.g
-            self.memory[offset + 2] = color.b
-            self.update_display()
+
+        self.memory[offset] = color.r
+        self.memory[offset + 1] = color.g
+        self.memory[offset + 2] = color.b
+        self.update_display()
+
+    def get(self, x, y, color):
+        offset = (
+            x * self.COMPONENTS_PER_PIXEL + (
+                (self.interface.size[1] - y - 1)
+                * (self.COMPONENTS_PER_PIXEL * self.interface.size[0])
+            )
+        )
+        return (self.memory[offset], self.memory[offset + 1], self.memory[offset + 2])
 
     def suspend_updates(self):
         """Temporarily suspend updates on the bitmap view.

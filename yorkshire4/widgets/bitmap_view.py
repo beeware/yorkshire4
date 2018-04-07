@@ -1,3 +1,5 @@
+from travertino.colors import rgb
+
 import toga
 from toga.handlers import wrapped_handler
 
@@ -22,6 +24,9 @@ class BitmapView(toga.Widget):
 
     def set(self, x, y, color):
         self._impl.set(x, y, color)
+
+    def get(self, x, y):
+        return rgb(self._impl.get(x, y))
 
     def __enter__(self):
         self._impl.suspend_updates()
