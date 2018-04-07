@@ -29,9 +29,9 @@ setup(
     install_requires=[],
     entry_points={
         'console_scripts': [
-            'c64 = yorkshire4.terminal:c64',
-            'microbee = yorkshire4.terminal:microbee',
-            'zxspectrum = yorkshire4.terminal:zxspectrum',
+            'c64 = yorkshire4.app:c64',
+            'microbee = yorkshire4.app:microbee',
+            'zxspectrum = yorkshire4.app:zxspectrum',
         ]
     },
     classifiers=[
