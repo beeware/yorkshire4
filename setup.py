@@ -26,7 +26,9 @@ setup(
     url='https://yorkshire4.readthedocs.io/',
     license='New BSD',
     packages=find_packages(exclude=['tests']),
-    install_requires=[],
+    install_requires=[
+        'toga==0.3.0.dev9'
+    ],
     entry_points={
         'console_scripts': [
             'c64 = yorkshire4.app:c64',
