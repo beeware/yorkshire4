@@ -15,13 +15,13 @@ class BitmapView(Widget):
         self.memory = bytearray(self.memory_size)
 
         # Create an image from the pixel buffer.
-        self.native = Gtk.Image.new_from_pixbuf(self.create_pixbuf())
+        self.native = Gtk.Image()
 
         # Current state of redraw updates
         self._suspended = 0
         self._update_pending = False
 
-    def create_pixbuf(self):
+    def create_pixbuf(self, width, height):
         pixbuf = GdkPixbuf.Pixbuf.new_from_data(
             data=self.memory,
             colorspace=GdkPixbuf.Colorspace.RGB,
@@ -87,7 +87,13 @@ class BitmapView(Widget):
         if self._suspended:
             self._update_pending = True
         else:
-            self.native.set_from_pixbuf(self.create_pixbuf())
+            allocation = self.native.get_allocation()
+            self.native.set_from_pixbuf(
+                self.create_pixbuf(
+                    allocation.width,
+                    allocation.height,
+                )
+            )
             self._update_pending = False
 
     def resume_updates(self):
@@ -102,5 +108,11 @@ class BitmapView(Widget):
 
         if self._suspended == 0:
             if self._update_pending:
-                self.native.set_from_pixbuf(self.create_pixbuf())
+                allocation = self.native.get_allocation()
+                self.native.set_from_pixbuf(
+                    self.create_pixbuf(
+                        allocation.width,
+                        allocation.height,
+                    )
+                )
                 self._update_pending = False
