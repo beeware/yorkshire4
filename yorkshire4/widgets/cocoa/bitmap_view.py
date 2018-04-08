@@ -1,7 +1,6 @@
 from ctypes import (
     c_double, c_void_p, c_ubyte, c_size_t, c_bool, c_ulong, POINTER, c_long
 )
-import random
 
 from rubicon.objc import CGRect, objc_method
 from rubicon.objc.types import register_preferred_encoding
@@ -144,10 +143,9 @@ class BitmapView(Widget):
         self._update_pending = False
 
         # Allocate a memory buffer, initialized to 0
-        self.memory_size = self.interface.size[0] * self.interface.size[1] * self.COMPONENTS_PER_PIXEL
+        self.memory_stride = self.interface.size[0] * self.COMPONENTS_PER_PIXEL
+        self.memory_size = self.interface.size[1] * self.memory_stride
         self.memory = (self.memory_size * c_ubyte)()
-        for i in range(0, self.memory_size):
-            self.memory[i] = random.randint(0, 255)
 
         # Add the layout constraints
         self.add_constraints()
@@ -162,8 +160,7 @@ class BitmapView(Widget):
     def set(self, x, y, color):
         offset = (
             x * self.COMPONENTS_PER_PIXEL + (
-                (self.interface.size[1] - y - 1)
-                * (self.COMPONENTS_PER_PIXEL * self.interface.size[0])
+                (self.interface.size[1] - y - 1) * self.memory_stride
             )
         )
 

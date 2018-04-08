@@ -24,18 +24,18 @@ def get_platform_factory(factory=None):
 
     if sys.platform == 'ios':
         from . import iOS as factory
-    elif sys.platform == 'tvos':
-        from . import tvOS as factory
-    elif sys.platform == 'watchos':
-        from . import watchOS as factory
-    elif sys.platform == 'android':
-        from . import android as factory
-    elif sys.platform == 'darwin':
-        from . import cocoa as factory
+    # elif sys.platform == 'tvos':
+    #     from . import tvOS as factory
+    # elif sys.platform == 'watchos':
+    #     from . import watchOS as factory
+    # elif sys.platform == 'android':
+    #     from . import android as factory
+    # elif sys.platform == 'darwin':
+    #     from . import cocoa as factory
     elif sys.platform == 'linux':
         from . import gtk as factory
-    elif sys.platform == 'win32':
-        from . import winforms as factory
+    # elif sys.platform == 'win32':
+    #     from . import winforms as factory
     else:
         raise RuntimeError("Couldn't identify a supported host platform.")
 
