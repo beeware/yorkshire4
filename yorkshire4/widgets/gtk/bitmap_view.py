@@ -1,4 +1,4 @@
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 from travertino.size import at_least
 
 # from toga_gtk.keys import toga_key
@@ -22,18 +22,16 @@ class BitmapView(Widget):
         self._update_pending = False
 
     def create_pixbuf(self, width, height):
-        pixbuf = GdkPixbuf.Pixbuf.new_from_data(
-            data=self.memory,
+        pixbuf = GdkPixbuf.Pixbuf.new_from_bytes(
+            data=GLib.Bytes(self.memory),
             colorspace=GdkPixbuf.Colorspace.RGB,
             has_alpha=False,
             bits_per_sample=8,
             width=self.interface.size[0],
             height=self.interface.size[1],
             rowstride=self.memory_stride,
-            destroy_fn=None,
-            destroy_fn_data=None,
         )
-        return pixbuf
+        return pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
 
     def _key_press(self, widget, ev, data=None):
         if self.interface.on_key_press:
