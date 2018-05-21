@@ -30,8 +30,8 @@ def get_platform_factory(factory=None):
     #     from . import watchOS as factory
     # elif sys.platform == 'android':
     #     from . import android as factory
-    # elif sys.platform == 'darwin':
-    #     from . import cocoa as factory
+    elif sys.platform == 'darwin':
+        from . import cocoa as factory
     elif sys.platform == 'linux':
         from . import gtk as factory
     # elif sys.platform == 'win32':
