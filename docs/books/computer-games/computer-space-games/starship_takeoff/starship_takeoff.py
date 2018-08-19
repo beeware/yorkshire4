@@ -1,6 +1,7 @@
 # Import the 'random' module, so you can generate random numbers
 import random
 
+
 print('Starship Take-off')
 print('-----------------')
 print()
