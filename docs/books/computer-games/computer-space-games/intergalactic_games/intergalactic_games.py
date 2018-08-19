@@ -5,6 +5,7 @@ from random import randint
 from math import atan, pi
 from math import sqrt
 
+
 # Set up the number of guesses we're going to get
 guesses = 8
 

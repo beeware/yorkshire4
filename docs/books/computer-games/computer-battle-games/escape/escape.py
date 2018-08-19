@@ -3,12 +3,10 @@
 # * sys to manipulate the terminal
 import sys, random
 
-# This utility method is used to clear the screen.
-# It uses an ANSI escape sequence that the computer understands but is difficult to type
-# on a keyboard.
-def clear_screen():
-    print('\033[2J\033[H', end='')
-    sys.stdout.flush()
+# Includes some yorkshire4 terminal utilities, too
+from yorkshire4.terminal import clear_screen
+
+
 clear_screen()
 
 # This chooses a number between 1 and 100 for the frequency of the Robots.
