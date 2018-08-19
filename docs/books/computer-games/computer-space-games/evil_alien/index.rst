@@ -12,3 +12,17 @@ The code
 
 .. literalinclude:: evil_alien.py
    :language: python
+
+
+How to make the game harder
+---------------------------
+
+This program has been written so that you can easily change the difficulty by changing the size of the grid. To do this, put a different value for `s` in line 10.
+
+If you increase the grid size you will need more space bombs to give you a fair chance of blasting Elron. Do this by changing the value of `goes` in line 14.
+
+Puzzle corner
+-------------
+
+Can you work out how to change the program so that the computer asks you for a difficulty number which it can out into `size` instead of `size` being fixed? 
+(Tip: limit the value of `size` to between 6 and 30 and use `int(size//3)` for the value of `goes` in line 14.)
