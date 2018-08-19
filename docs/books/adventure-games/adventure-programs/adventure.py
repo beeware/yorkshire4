@@ -5,6 +5,9 @@
 import random
 import sys
 
+# Includes some yorkshire4 terminal utilities, too
+from yorkshire4.terminal import clear_screen
+
 # Here we define a number of 'constants' - these are variables which store values
 # that are used throughout the game, and which don't change. This means we can use
 # the variable name, rather than typing in the value each time. This has a couple
@@ -262,23 +265,6 @@ GAME_MAP = [
         {'description': 'Crumbling Clifftop', 'objects': set(), 'exits': 'w'},
     ]
 ]
-
-
-# Define a utility method to clear the screen.
-# This uses "ANSI Escape Sequences" - special combinations of
-# characters that are understood by the terminal, but are difficult
-# (or impossible) to type on a keyboard. `\033[` is the
-# "escape sequence"; the characters after the escape sequnce are
-# interpreted as commands. In this case, we're using:
-#   2J - clear screen; and
-#   H - move the cursor to the Home position (top left corner)
-#
-# For more details about ANSI escape sequences, see:
-#     https://en.wikipedia.org/wiki/ANSI_escape_code
-#
-def clear_screen():
-    print('\033[2J\033[H', end='')
-    sys.stdout.flush()
 
 
 # Utility method to join a list of words using commas and an "and". For example:
