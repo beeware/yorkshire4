@@ -5,6 +5,7 @@ import random
 import string
 import time
 
+
 print('VITAL MESSAGE')
 
 # Variable to store the difficulty i.e length of string

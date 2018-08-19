@@ -27,7 +27,7 @@ setup(
     license='New BSD',
     packages=find_packages(exclude=['tests']),
     install_requires=[
-        'toga==0.3.0.dev9'
+        'toga>=0.3.0.dev9'
     ],
     entry_points={
         'console_scripts': [
