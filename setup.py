@@ -26,12 +26,14 @@ setup(
     url='https://yorkshire4.readthedocs.io/',
     license='New BSD',
     packages=find_packages(exclude=['tests']),
-    install_requires=[],
+    install_requires=[
+        'toga>=0.3.0.dev9'
+    ],
     entry_points={
         'console_scripts': [
-            'c64 = yorkshire4.terminal:c64',
-            'microbee = yorkshire4.terminal:microbee',
-            'zxspectrum = yorkshire4.terminal:zxspectrum',
+            'c64 = yorkshire4.app:c64',
+            'microbee = yorkshire4.app:microbee',
+            'zxspectrum = yorkshire4.app:zxspectrum',
         ]
     },
     classifiers=[

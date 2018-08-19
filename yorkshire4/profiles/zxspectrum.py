@@ -1,7 +1,11 @@
+from travertino.colors import color
+
+
 UNPRINTABLE_CHAR = [0, 0, 0, 0, 0, 0, 0, 0]
 
 ZX_SPECTRUM_FONT = [
-    # The system font is stored at 0x3D00-0x3FFF in the ROM with each character being represented
+    # The system font is stored at 0x3D00-0x3FFF in the ROM with
+    # each character being represented
     # by 8 sequential bytes (left pixel is high bit)
     # https://damieng.com/blog/2011/02/20/typography-in-8-bits-system-fonts
     # https://web.archive.org/web/20050307204242/http://eclecticsatyr.hostultra.com/speccs.htm
@@ -269,7 +273,8 @@ ZX_SPECTRUM_FONT = [
     UNPRINTABLE_CHAR,  # INPUT
     UNPRINTABLE_CHAR,  # LOAD
     # 240
-    # LIST 	LET 	PAUSE 	NEXT 	POKE 	PRINT 	PLOT 	RUN 	SAVE 	RANDOMIZE 	IF 	CLS 	DRAW 	CLEAR 	RETURN 	COPY
+    # LIST LET PAUSE NEXT POKE PRINT PLOT RUN SAVE
+    # RANDOMIZE IF CLS DRAW CLEAR RETURN COPY
     UNPRINTABLE_CHAR,  # LIST
     UNPRINTABLE_CHAR,  # LET
     UNPRINTABLE_CHAR,  # PAUSE
@@ -289,36 +294,51 @@ ZX_SPECTRUM_FONT = [
 ]
 
 # ZX Spectrum screen profile
-ZX_SPECTRUM = {
-    # ZX Spectrum 'full screen' is 403 pixels wide x 312 pixels high , including the border area
-    'full_screen_size': (352, 312),
-    # ZX Spectrum 'addressable' screen area - 256 pixels wide x 192 pixels high
-    'screen_size': (256, 192),
-    # ZX Spectrum text characters are 8 pixels wide x 8 pixels high
-    'character_size': (8, 8),
-    # ZX Spectrum  colors
-    'colors': [
-        # dark
-        '#000000',  # black
-        '#0000D7',  # blue
-        '#D70000',  # red
-        '#D700D7',  # magenta
-        '#00D700',  # green
-        '#00D7D7',  # cyan
-        '#D7D700',  # yellow
-        '#D7D7D7',  # white
-        # bright
-        '#000000',  # black
-        '#0000FF',  # blue
-        '#FF0000',  # red
-        '#FF00FF',  # magenta
-        '#00FF00',  # green
-        '#00FFFF',  # cyan
-        '#FFFF00',  # yellow
-        '#FFFFFF',  # white
-    ],
-    'default_border_color': 0,  # black
-    'default_screen_color': 7,  # white
-    'default_text_color': 0,  # black
-    'font': ZX_SPECTRUM_FONT,
-}
+
+__name__ = 'ZX Spectrum'
+
+# ZX Spectrum 'full screen' is 403 pixels wide x 312 pixels high,
+# including the border area
+full_screen_size = (352, 312)
+
+# ZX Spectrum 'addressable' screen area - 256 pixels wide x 192 pixels high
+screen_size = (256, 192)
+
+# ZX Spectrum text characters are 8 pixels wide x 8 pixels high
+character_size = (8, 8)
+
+# ZX Spectrum  colors
+colors = [
+    # dark
+    color('#000000'),  # black
+    color('#0000D7'),  # blue
+    color('#D70000'),  # red
+    color('#D700D7'),  # magenta
+    color('#00D700'),  # green
+    color('#00D7D7'),  # cyan
+    color('#D7D700'),  # yellow
+    color('#D7D7D7'),  # white
+    # bright
+    color('#000000'),  # black
+    color('#0000FF'),  # blue
+    color('#FF0000'),  # red
+    color('#FF00FF'),  # magenta
+    color('#00FF00'),  # green
+    color('#00FFFF'),  # cyan
+    color('#FFFF00'),  # yellow
+    color('#FFFFFF'),  # white
+]
+
+default_border_color = 0  # black
+default_screen_color = 7  # white
+default_text_color = 0  # black
+
+font = ZX_SPECTRUM_FONT
+
+# The character code to use for the cursor (' ')
+cursor_char = 32
+
+# Cursor blink delay (in ms)
+cursor_blink_delay = 500
+
+boot_text = ''

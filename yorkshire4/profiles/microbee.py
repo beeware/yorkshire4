@@ -1,3 +1,6 @@
+from travertino.colors import color
+
+
 MICROBEE_FONT = [
     # 0
     [0, 0, 0, 0, 127, 65, 65, 65, 65, 65, 65, 65, 127, 0, 0, 0],
@@ -275,20 +278,37 @@ MICROBEE_FONT = [
 
 # Microbee screen profile
 # http://harveycohen.net/oznaki/microbee.html
-MICROBEE = {
-    # Microbee 'full screen' is 512 pixels wide x 512 pixels high , including the border area
-    'full_screen_size': (512, 512),
-    # Microbee 'addressable' screen area - 512 pixels wide x 512 pixels high
-    'screen_size': (512, 512),
-    # Microbee text characters are 8 pixels wide x 16 pixels high
-    'character_size': (8, 16),
-    # Microbee colors (monochrome display)
-    'colors': [
-        '#000000',  # black
-        '#00FF00',  # green
-    ],
-    'default_border_color': 0,  # black
-    'default_screen_color': 0,  # black
-    'default_text_color': 1,  # green
-    'font': MICROBEE_FONT,
-}
+__name__ = 'MicroBee'
+
+# Microbee 'full screen' is 512 pixels wide x 512 pixels high,
+# including the border area
+full_screen_size = (512, 512)
+
+# Microbee 'addressable' screen area - 512 pixels wide x 512 pixels high
+screen_size = (512, 512)
+
+# Microbee text characters are 8 pixels wide x 16 pixels high
+character_size = (8, 16)
+
+# Microbee colors (monochrome display)
+colors = [
+    color('#000000'),  # black
+    color('#00FF00'),  # green
+]
+
+default_border_color = 0  # black
+default_screen_color = 0  # black
+default_text_color = 1  # green
+
+font = MICROBEE_FONT
+
+# The character code to use for the cursor ('_')
+
+cursor_char = 95
+
+# Cursor blink delay (in ms)
+cursor_blink_delay = 500
+
+boot_text = '''Applied Technology MicroBee Colour Basic. Ver 6.00
+
+>'''

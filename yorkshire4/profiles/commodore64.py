@@ -1,19 +1,24 @@
+from travertino.colors import color
+
+
 UNPRINTABLE_CHAR = [0, 0, 0, 0, 0, 0, 0, 0]
 
 # Commodore 64 character/font as bytes
 # ref: http://sta.c64.org/cbm64pet.html
 # NOTES:
-#  - The Commodore 64 has two printing 'modes' - upper case/graphics, and lower case/upper case,
-#    which use two sets of characters, some of which overlap. Both can be used at the same time on
-#    screen - see further notes below.
-#  - Codes $00-$1F and $80-$9F are control codes. Printing them will cause a change in screen
-#    layout or behavior, not an actual character displayed.
-#  - Codes $60-$7F and $E0-$FE are not used. Although you can print them, these are, actually,
-#    copies of codes $C0-$DF and $A0-$BE.
-#  - Code $FF is the BASIC token of the π (pi) symbol. It is converted internally to code $DE
-#    when printed and, vice versa, code $DE is converted to $FF when fetched from the screen.
-#    However, when reading the keyboard buffer, you will find code $DE for Shift-↑ (up arrow)
-#    as no conversion takes place there yet.
+#  - The Commodore 64 has two printing 'modes' - upper case/graphics, and
+#    lower case/upper case, which use two sets of characters, some of which
+#    overlap. Both can be used at the same time on screen - see further notes
+#    below.
+#  - Codes $00-$1F and $80-$9F are control codes. Printing them will cause a
+#    change in screen layout or behavior, not an actual character displayed.
+#  - Codes $60-$7F and $E0-$FE are not used. Although you can print them, these
+#    are, actually, copies of codes $C0-$DF and $A0-$BE.
+#  - Code $FF is the BASIC token of the π (pi) symbol. It is converted
+#    internally to code $DE when printed and, vice versa, code $DE is
+#    converted to $FF when fetched from the screen. However, when reading the
+#    keyboard buffer, you will find code $DE for Shift-↑ (up arrow) as no
+#    conversion takes place there yet.
 C64_UPPERCASE_AND_GRAPHICS = [
     # 0
     UNPRINTABLE_CHAR,
@@ -592,56 +597,72 @@ C64_LOWERCASE_AND_UPPERCASE = [
 ]
 
 
-def c64_character_mapper(text):
-    char_codes = [ord(character) for character in text]
-    for idx, char_code in enumerate(char_codes):
-        # Commodore 64 note - we need to translate the ASCII codes of some characters
-        # to map to the 'PETSCII' character schema, unfortunately - refer to:
-        #     http://sta.c64.org/cbm64pet.html
-        if 97 <= char_code <= 122:
-             # lowercase a-z
-             char_codes[idx] -= 32
-        elif 65 <= char_code <= 90:
-             # uppercase A-Z
-             char_codes[idx] += 32
-    return char_codes
+def map_font(ch):
+    # Commodore 64 note - we need to translate the ASCII codes
+    # of some characters to map to the 'PETSCII' character schema,
+    # unfortunately - refer to:
+    #     http://sta.c64.org/cbm64pet.html
+    if 97 <= ch <= 122:
+        # lowercase a-z
+        return C64_LOWERCASE_AND_UPPERCASE[ch - 32]
+    return C64_UPPERCASE_AND_GRAPHICS[ch]
 
 
 # Commodore 64 screen profile
-COMMODORE_64 = {
-    # Commodore64 'full screen' is 403 pixels wide x 284 pixels high , including the border area
-    'full_screen_size': (403, 284),
-    # Commodore64 'addressable' screen area - 320 pixels wide x 200 pixels high
-    'screen_size': (320, 200),
-    # Commodore64 text characters are 8 pixels wide x 8 pixels high
-    'character_size': (8, 8),
-    # Commodore 64 colors - see the very interesting article here:
-    #    http://unusedino.de/ec64/technical/misc/vic656x/colors/
-    'colors': [
-        '#000000',  # 0  black
-        '#FFFFFF',  # 1  white
-        '#68372B',  # 2  red
-        '#70A4B2',  # 3  cyan
-        '#6F3D86',  # 4  purple
-        '#588D43',  # 5  green
-        '#352879',  # 6  blue
-        '#B8C76F',  # 7  yellow
-        '#6F4F25',  # 8  orange
-        '#433900',  # 9  brown
-        '#9A6759',  # 10 light red
-        '#444444',  # 11 dark grey
-        '#6C6C6C',  # 12 grey
-        '#9AD284',  # 13 light green
-        '#6C5EB5',  # 14 light blue
-        '#959595',  # 15 light grey
-    ],
-    'default_border_color': 14,  # light blue
-    'default_screen_color': 6,  # blue
-    'default_text_color': 14,  # light blue
-    # C64 has an 'odd' character set / font due to the uppercase/graphics and
-    # lowercase/uppercase 'modes' of printing
-    'font': C64_LOWERCASE_AND_UPPERCASE + C64_UPPERCASE_AND_GRAPHICS,
-    # because of the nature of the C64's character map, we need to do some special
-    # conversion when printing text
-    'text_to_character_mapper': c64_character_mapper,
-}
+__name__ = 'Commodore 64'
+
+# Commodore64 'full screen' is 403 pixels wide x 284 pixels high,
+# including the border area
+full_screen_size = (403, 284)
+
+# Commodore64 'addressable' screen area - 320 pixels wide x 200 pixels high
+screen_size = (320, 200)
+
+# Commodore64 text characters are 8 pixels wide x 8 pixels high
+character_size = (8, 8)
+
+# Commodore 64 colors - see the very interesting article here:
+#    http://unusedino.de/ec64/technical/misc/vic656x/colors/
+colors = [
+    color('#000000'),  # 0  black
+    color('#FFFFFF'),  # 1  white
+    color('#68372B'),  # 2  red
+    color('#70A4B2'),  # 3  cyan
+    color('#6F3D86'),  # 4  purple
+    color('#588D43'),  # 5  green
+    color('#352879'),  # 6  blue
+    color('#B8C76F'),  # 7  yellow
+    color('#6F4F25'),  # 8  orange
+    color('#433900'),  # 9  brown
+    color('#9A6759'),  # 10 light red
+    color('#444444'),  # 11 dark grey
+    color('#6C6C6C'),  # 12 grey
+    color('#9AD284'),  # 13 light green
+    color('#6C5EB5'),  # 14 light blue
+    color('#959595'),  # 15 light grey
+]
+
+default_border_color = 14  # light blue
+default_screen_color = 6  # blue
+default_text_color = 14  # light blue
+
+# C64 has an 'odd' character set / font due to the uppercase/graphics and
+# lowercase/uppercase 'modes' of printing
+font = [
+    map_font(ch)
+    for ch in range(0, 255)
+]
+
+# The character code to use for the cursor (' ')
+cursor_char = 32
+
+# Cursor blink delay (in ms)
+cursor_blink_delay = 500
+
+boot_text = '''
+    **** COMMODORE 64 BASIC V2 ****
+
+ 64K RAM SYSTEM  38911 BASIC BYTES FREE
+
+READY.
+'''
