@@ -885,7 +885,7 @@ while True:
     print(message)
 
     if (is_active(OBJ_BATS) and is_in_room((1, 5), current_location) and
-        verb != VERB_SPRAY and random.randint(1, 3) != 3):
+            verb != VERB_SPRAY and random.randint(1, 3) != 3):
         # bats are active in Room 13 - Rear Turret Room
         activate_flag(OBJ_BATS)
         message = 'BATS ATTACKING!!'
