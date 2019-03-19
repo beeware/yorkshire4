@@ -5,7 +5,7 @@ import random
 import time
 
 # Includes some yorkshire4 terminal utilities, too
-from yorkshire4.terminal import hide_cursor, show_cursor, clear_screen
+from yorkshire4.terminal import getch, hide_cursor, show_cursor, clear_screen
 
 
 # Start by hiding the cursor
